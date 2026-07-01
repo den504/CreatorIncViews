@@ -6,33 +6,83 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		560300622FF4BC8400AE8975 /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = 560300612FF4BC8400AE8975 /* Supabase */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		5603006B2FF4C30900AE8975 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 56BFEAE32FE0DB80007E68EA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 56BFEAEA2FE0DB80007E68EA;
+			remoteInfo = CreatorInc;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
+		560300672FF4C30900AE8975 /* CreatorIncTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CreatorIncTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		56BFEAEB2FE0DB80007E68EA /* CreatorInc.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CreatorInc.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		5603005F2FF2FD7900AE8975 /* Exceptions for "CreatorInc" folder in "CreatorInc" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 56BFEAEA2FE0DB80007E68EA /* CreatorInc */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		560300682FF4C30900AE8975 /* CreatorIncTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = CreatorIncTests;
+			sourceTree = "<group>";
+		};
 		56BFEAED2FE0DB80007E68EA /* CreatorInc */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				5603005F2FF2FD7900AE8975 /* Exceptions for "CreatorInc" folder in "CreatorInc" target */,
+			);
 			path = CreatorInc;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		56BFEAE82FE0DB80007E68EA /* Frameworks */ = {
+		560300642FF4C30900AE8975 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		56BFEAE82FE0DB80007E68EA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				560300622FF4BC8400AE8975 /* Supabase in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		560300602FF4BC8400AE8975 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		56BFEAE22FE0DB80007E68EA = {
 			isa = PBXGroup;
 			children = (
 				56BFEAED2FE0DB80007E68EA /* CreatorInc */,
+				560300682FF4C30900AE8975 /* CreatorIncTests */,
+				560300602FF4BC8400AE8975 /* Frameworks */,
 				56BFEAEC2FE0DB80007E68EA /* Products */,
 			);
 			sourceTree = "<group>";
@@ -41,6 +91,7 @@
 			isa = PBXGroup;
 			children = (
 				56BFEAEB2FE0DB80007E68EA /* CreatorInc.app */,
+				560300672FF4C30900AE8975 /* CreatorIncTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -48,6 +99,29 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		560300662FF4C30900AE8975 /* CreatorIncTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5603006D2FF4C30900AE8975 /* Build configuration list for PBXNativeTarget "CreatorIncTests" */;
+			buildPhases = (
+				560300632FF4C30900AE8975 /* Sources */,
+				560300642FF4C30900AE8975 /* Frameworks */,
+				560300652FF4C30900AE8975 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				5603006C2FF4C30900AE8975 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				560300682FF4C30900AE8975 /* CreatorIncTests */,
+			);
+			name = CreatorIncTests;
+			packageProductDependencies = (
+			);
+			productName = CreatorIncTests;
+			productReference = 560300672FF4C30900AE8975 /* CreatorIncTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		56BFEAEA2FE0DB80007E68EA /* CreatorInc */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 56BFEAF62FE0DB81007E68EA /* Build configuration list for PBXNativeTarget "CreatorInc" */;
@@ -65,6 +139,7 @@
 			);
 			name = CreatorInc;
 			packageProductDependencies = (
+				560300612FF4BC8400AE8975 /* Supabase */,
 			);
 			productName = CreatorInc;
 			productReference = 56BFEAEB2FE0DB80007E68EA /* CreatorInc.app */;
@@ -80,6 +155,10 @@
 				LastSwiftUpdateCheck = 2620;
 				LastUpgradeCheck = 2620;
 				TargetAttributes = {
+					560300662FF4C30900AE8975 = {
+						CreatedOnToolsVersion = 26.2;
+						TestTargetID = 56BFEAEA2FE0DB80007E68EA;
+					};
 					56BFEAEA2FE0DB80007E68EA = {
 						CreatedOnToolsVersion = 26.2;
 					};
@@ -94,17 +173,28 @@
 			);
 			mainGroup = 56BFEAE22FE0DB80007E68EA;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				560300502FF027AB00AE8975 /* XCRemoteSwiftPackageReference "supabase-swift" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 56BFEAEC2FE0DB80007E68EA /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
 				56BFEAEA2FE0DB80007E68EA /* CreatorInc */,
+				560300662FF4C30900AE8975 /* CreatorIncTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		560300652FF4C30900AE8975 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		56BFEAE92FE0DB80007E68EA /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -115,6 +205,13 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		560300632FF4C30900AE8975 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		56BFEAE72FE0DB80007E68EA /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -124,7 +221,57 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		5603006C2FF4C30900AE8975 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 56BFEAEA2FE0DB80007E68EA /* CreatorInc */;
+			targetProxy = 5603006B2FF4C30900AE8975 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		5603006E2FF4C30900AE8975 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = L4JYF9R6VL;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.abuahapps.CreatorIncTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CreatorInc.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/CreatorInc";
+			};
+			name = Debug;
+		};
+		5603006F2FF4C30900AE8975 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = L4JYF9R6VL;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.abuahapps.CreatorIncTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CreatorInc.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/CreatorInc";
+			};
+			name = Release;
+		};
 		56BFEAF42FE0DB81007E68EA /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -256,6 +403,7 @@
 				DEVELOPMENT_TEAM = L4JYF9R6VL;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = CreatorInc/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -288,6 +436,7 @@
 				DEVELOPMENT_TEAM = L4JYF9R6VL;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = CreatorInc/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -313,6 +462,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		5603006D2FF4C30900AE8975 /* Build configuration list for PBXNativeTarget "CreatorIncTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5603006E2FF4C30900AE8975 /* Debug */,
+				5603006F2FF4C30900AE8975 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		56BFEAE62FE0DB80007E68EA /* Build configuration list for PBXProject "CreatorInc" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -332,6 +490,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		560300502FF027AB00AE8975 /* XCRemoteSwiftPackageReference "supabase-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/supabase/supabase-swift.git";
+			requirement = {
+				kind = upToNextMinorVersion;
+				minimumVersion = 2.5.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		560300612FF4BC8400AE8975 /* Supabase */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 560300502FF027AB00AE8975 /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Supabase;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 56BFEAE32FE0DB80007E68EA /* Project object */;
 }

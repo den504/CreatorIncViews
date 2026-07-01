@@ -10,10 +10,28 @@ import SwiftUI
 struct CreateAccountView: View {
     @Binding var selectedRole: AccountRole
     let onBack: () -> Void
-
-    @State private var emailAddress = ""
-    @State private var password = ""
-    @State private var confirmedPassword = ""
+    
+    @StateObject private var viewModel: CreateAccountViewModel
+    
+    //Keep it alive — SwiftUI recreates your view struct constantly (on every state change, every redraw). Without @StateObject, your VM would be thrown away and rebuilt each time. @StateObject tells SwiftUI to hold the VM in separate storage so it survives those redraws.
+   // Hand it the initial value once — because SwiftUI only reads that initial value on the very first creation. If the view redraws and the expression inside @StateObject would produce a different object, SwiftUI ignores it — it already has one. So it only makes sense to set it up during init, where you're guaranteed to be in that first-creation moment.
+    // @escaping just says don't consider this function until is needed - so
+    // on init it would skip it - but when the user taps back it kicks off
+    
+    init(selectedRole: Binding<AccountRole>, onBack: @escaping () -> Void ){
+        self._selectedRole = selectedRole
+        self.onBack = onBack
+        //SupabaseConfig and auth service passed here
+        let config = SupabaseConfig.config
+        let service: AuthServicing
+        if let config {
+            service = SupabaseAuthService(config: config)
+        } else {
+            service = UnavailableAuthService()
+        }
+        self._viewModel = StateObject(wrappedValue: CreateAccountViewModel(authService: service))
+    }
+    
 
     var body: some View {
         ZStack {
@@ -53,22 +71,28 @@ struct CreateAccountView: View {
                     AccountTextField(
                         title: "Email address",
                         systemImage: "envelope",
-                        text: $emailAddress
+                        text: $viewModel.email
                     )
 
                     AccountSecureField(
                         title: "Password",
                         systemImage: "lock.fill",
-                        text: $password
+                        text: $viewModel.password
                     )
 
                     AccountSecureField(
                         title: "Confirm password",
                         systemImage: "lock.fill",
-                        text: $confirmedPassword
+                        text: $viewModel.confirmedPassword
                     )
                 }
                 .padding(.bottom, 18)
+                if let message = viewModel.message {
+                    Text(message)
+                        .font(.system(size: 12, weight: .semibold))
+                        .foregroundStyle(Color.creatorSecondaryText)
+                        .padding(.bottom, 12)
+                }
 
                 DividerWithText("or continue with")
                     .padding(.bottom, 14)
@@ -80,11 +104,15 @@ struct CreateAccountView: View {
                 .padding(.bottom, 18)
 
                 Button {
+                    Task {
+                        await viewModel.createAccount()
+                    }
                 } label: {
-                    Text("Create Account")
+                    Text(viewModel.isLoading ? "Creating..." : "Create Account")
                         .frame(maxWidth: .infinity)
                 }
                 .buttonStyle(PrimaryActionButtonStyle())
+                .disabled(viewModel.isLoading)
                 .padding(.bottom, 18)
 
                 TermsText()
@@ -101,6 +129,9 @@ struct CreateAccountView: View {
 
 struct CreateAccountView_Previews: PreviewProvider {
     static var previews: some View {
-        CreateAccountView(selectedRole: .constant(.creator)) {}
+        CreateAccountView(
+            selectedRole: .constant(.creator),
+            onBack: {}
+        )
     }
 }
