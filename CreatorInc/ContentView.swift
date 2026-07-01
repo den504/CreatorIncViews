@@ -19,9 +19,10 @@ struct ContentView: View {
                 activeScreen = .createAccount
             }
         case .createAccount:
-            CreateAccountView(selectedRole: $selectedRole) {
-                activeScreen = .welcome
-            }
+            CreateAccountView(
+                selectedRole: $selectedRole,
+                onBack: { activeScreen = .welcome }
+            )
         }
     }
 }
