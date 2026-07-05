@@ -1,18 +1,17 @@
 //
-//  CreateAccountViewModel.swift
+//  LoginViewModel.swift
 //  CreatorInc
 //
-//  Created by Dennis Okafor on 29/06/2026.
+//  Created by Dennis Okafor on 05/07/2026.
 //
 
 import Foundation
 import Combine
 
 @MainActor
-final class CreateAccountViewModel: ObservableObject {
+final class LoginViewModel: ObservableObject {
     @Published var email = ""
     @Published var password = ""
-    @Published var confirmedPassword = ""
     
     @Published private(set) var message: String?
     @Published private(set) var isLoading = false
@@ -20,40 +19,40 @@ final class CreateAccountViewModel: ObservableObject {
     private let validator = AuthCredentialsValidator()
     private let authService: AuthServicing
     
-    init(authService: AuthServicing, message: String? = nil) {
+    init(authService: AuthServicing, message: String? = nil){
         self.authService = authService
         self.message = message
     }
     
-    func createAccount() async -> Bool {
+    func login() async -> Bool {
         message = nil
         isLoading = true
+        
         defer {
             isLoading = false
         }
         
         do {
-            try validator.validate(email: email, password: password, confirmedPassword: confirmedPassword)
-            
+            try validator.validate(email: email, password: password, confirmedPassword: password)
         } catch {
             message = error.localizedDescription
             return false
         }
         
         do {
-            try await authService.createAccount(email: email, password: password)
-            message = "Account created. You can now log in."
-            clearForm()
+            try await authService.login(email: email, password: password)
+            clearForm() //remove/test if this makes sense when you know where the user goes after Login
             return true
+            
         } catch {
-            message = error.localizedDescription //supabase would throw the error
+            message = error.localizedDescription
             return false
         }
+        
     }
     
-    private func clearForm() {
+    private func clearForm() { //Might Remove this after I reroute Login to a different views
         email = ""
         password = ""
-        confirmedPassword = ""
     }
 }

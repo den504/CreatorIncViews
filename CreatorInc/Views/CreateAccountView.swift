@@ -10,6 +10,7 @@ import SwiftUI
 struct CreateAccountView: View {
     @Binding var selectedRole: AccountRole
     let onBack: () -> Void
+    let onAccountCreated: () -> Void
     
     @StateObject private var viewModel: CreateAccountViewModel
     
@@ -18,12 +19,14 @@ struct CreateAccountView: View {
     // @escaping just says don't consider this function until is needed - so
     // on init it would skip it - but when the user taps back it kicks off
     
-    init(selectedRole: Binding<AccountRole>, onBack: @escaping () -> Void ){
+    init(selectedRole: Binding<AccountRole>, onBack: @escaping () -> Void, onAccountCreated: @escaping () -> Void ){
         self._selectedRole = selectedRole
+        self.onAccountCreated = onAccountCreated
         self.onBack = onBack
         //SupabaseConfig and auth service passed here
         let config = SupabaseConfig.config
         let service: AuthServicing
+        
         if let config {
             service = SupabaseAuthService(config: config)
         } else {
@@ -105,7 +108,10 @@ struct CreateAccountView: View {
 
                 Button {
                     Task {
-                        await viewModel.createAccount()
+                        let didCreateAccount = await viewModel.createAccount()
+                        if didCreateAccount {
+                            onAccountCreated()
+                        }
                     }
                 } label: {
                     Text(viewModel.isLoading ? "Creating..." : "Create Account")
@@ -127,11 +133,12 @@ struct CreateAccountView: View {
     }
 }
 
-struct CreateAccountView_Previews: PreviewProvider {
-    static var previews: some View {
-        CreateAccountView(
-            selectedRole: .constant(.creator),
-            onBack: {}
-        )
-    }
-}
+//struct CreateAccountView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        CreateAccountView(
+//            selectedRole: .constant(.creator),
+//            onBack: {}
+//            onAccountCreated: {}
+//        )
+//    }
+//}

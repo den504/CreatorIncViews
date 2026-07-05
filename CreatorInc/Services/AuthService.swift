@@ -10,6 +10,7 @@ import Supabase
 
 protocol AuthServicing {
     func createAccount(email: String, password: String) async throws
+    func login(email: String, password: String) async throws
 }
 
 struct SupabaseAuthService: AuthServicing {
@@ -22,10 +23,17 @@ struct SupabaseAuthService: AuthServicing {
     func createAccount(email: String, password: String) async throws {
         try await client.auth.signUp(email: email, password: password)
     }
+    
+    func login(email: String, password: String) async throws {
+        try await client.auth.signIn(email: email, password: password)
+    }
 }
 
 struct UnavailableAuthService: AuthServicing {
     func createAccount(email: String, password: String) async throws {
+        throw AuthValidationError.missingSupabaseConfig
+    }
+    func login(email: String, password: String) async throws {
         throw AuthValidationError.missingSupabaseConfig
     }
 }

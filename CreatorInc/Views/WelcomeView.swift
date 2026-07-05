@@ -9,6 +9,7 @@ import SwiftUI
 
 struct WelcomeView: View {
     let onRoleSelected: (AccountRole) -> Void
+    let onLoginSelected: () -> Void
 
     var body: some View {
         ZStack {
@@ -45,6 +46,7 @@ struct WelcomeView: View {
                         .foregroundStyle(Color.creatorMuted)
 
                     Button("Log in") {
+                        onLoginSelected()
                     }
                     .fontWeight(.bold)
                     .foregroundStyle(Color.creatorPrimary)
@@ -177,8 +179,8 @@ private struct RoleSelectionButtons: View {
     }
 }
 
-struct WelcomeView_Previews: PreviewProvider {
-    static var previews: some View {
-        WelcomeView { _ in }
-    }
-}
+//struct WelcomeView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        WelcomeView { _ in }
+//    }
+//}
