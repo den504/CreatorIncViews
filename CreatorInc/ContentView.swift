@@ -10,19 +10,32 @@ import SwiftUI
 struct ContentView: View {
     @State private var activeScreen: ActiveScreen = .welcome
     @State private var selectedRole: AccountRole = .creator
+    @State private var loginMessage: String?
 
     var body: some View {
         switch activeScreen {
         case .welcome:
-            WelcomeView { role in
-                selectedRole = role
-                activeScreen = .createAccount
-            }
+            WelcomeView(
+                onRoleSelected: {
+                    role in
+                    selectedRole = role
+                    activeScreen = .createAccount
+                },
+                onLoginSelected: { loginMessage = nil
+                    activeScreen = .login
+                }
+            )
         case .createAccount:
             CreateAccountView(
                 selectedRole: $selectedRole,
-                onBack: { activeScreen = .welcome }
+                onBack: { activeScreen = .welcome },
+                onAccountCreated: { loginMessage = "Account created. You can now log in."
+                    activeScreen = .login }
             )
+        case .login:
+            LoginView(onBack: {activeScreen = .welcome},
+                      message: loginMessage)
+            
         }
     }
 }
@@ -30,6 +43,7 @@ struct ContentView: View {
 private enum ActiveScreen {
     case welcome
     case createAccount
+    case login
 }
 
 struct ContentView_Previews: PreviewProvider {
