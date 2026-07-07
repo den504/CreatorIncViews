@@ -108,7 +108,7 @@ struct CreateAccountView: View {
 
                 Button {
                     Task {
-                        let didCreateAccount = await viewModel.createAccount()
+                        let didCreateAccount = await viewModel.createAccount(role: selectedRole)
                         if didCreateAccount {
                             onAccountCreated()
                         }

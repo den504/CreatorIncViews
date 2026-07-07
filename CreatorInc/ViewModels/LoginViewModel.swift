@@ -24,7 +24,7 @@ final class LoginViewModel: ObservableObject {
         self.message = message
     }
     
-    func login() async -> Bool {
+    func login() async -> LoginResult? {
         message = nil
         isLoading = true
         
@@ -36,17 +36,17 @@ final class LoginViewModel: ObservableObject {
             try validator.validate(email: email, password: password, confirmedPassword: password)
         } catch {
             message = error.localizedDescription
-            return false
+            return nil
         }
         
         do {
-            try await authService.login(email: email, password: password)
+            let result = try await authService.login(email: email, password: password)
             clearForm() //remove/test if this makes sense when you know where the user goes after Login
-            return true
+            return result
             
         } catch {
             message = error.localizedDescription
-            return false
+            return nil
         }
         
     }

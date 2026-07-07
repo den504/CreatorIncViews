@@ -7,9 +7,13 @@
 
 import Foundation
 
-enum AccountRole: String, CaseIterable, Identifiable {
-    case creator = "Creator"
-    case brand = "Brand"
+nonisolated enum AccountRole: String, CaseIterable, Identifiable, Codable, Sendable {
+    case creator
+    case brand
 
     var id: String { rawValue }
+    
+    var title: String {
+        rawValue.capitalized
+    }
 }

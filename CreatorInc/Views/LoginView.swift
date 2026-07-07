@@ -10,12 +10,14 @@ import SwiftUI
 struct LoginView: View {
     let onBack: () -> Void
     let message: String?
+    let onLoginSucceeded: (LoginResult) -> Void
     
     @StateObject private var viewModel: LoginViewModel
     
-    init(onBack: @escaping () -> Void, message: String?) {
+    init(onBack: @escaping () -> Void, message: String?, onLoginSucceeded: @escaping(LoginResult) -> Void) {
         self.onBack = onBack
         self.message = message
+        self.onLoginSucceeded = onLoginSucceeded
         let config = SupabaseConfig.config
         let service: AuthServicing
         
@@ -64,7 +66,10 @@ struct LoginView: View {
                     
                 Button {
                     Task {
-                        await viewModel.login()
+                        
+                        if let result = await viewModel.login() {
+                            onLoginSucceeded(result)
+                        }
                     }
                 } label: {
                     Text(viewModel.isLoading ? "Logging in...": "Log In").frame(maxWidth: .infinity)

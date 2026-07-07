@@ -33,8 +33,17 @@ struct ContentView: View {
                     activeScreen = .login }
             )
         case .login:
-            LoginView(onBack: {activeScreen = .welcome},
-                      message: loginMessage)
+            LoginView(
+                onBack: { activeScreen = .welcome },
+                message: loginMessage,
+                onLoginSucceeded: { result in
+                    activeScreen = result.role == .creator ? .buildCreatorProfile : .brandPlaceholder
+                }
+            )
+        case .buildCreatorProfile:
+            BuildCreatorProfileView()
+        case .brandPlaceholder:
+            Text("Brand profile coming soon")
             
         }
     }
@@ -44,6 +53,8 @@ private enum ActiveScreen {
     case welcome
     case createAccount
     case login
+    case buildCreatorProfile
+    case brandPlaceholder
 }
 
 struct ContentView_Previews: PreviewProvider {

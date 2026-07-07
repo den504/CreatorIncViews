@@ -25,7 +25,7 @@ final class CreateAccountViewModel: ObservableObject {
         self.message = message
     }
     
-    func createAccount() async -> Bool {
+    func createAccount(role: AccountRole) async -> Bool {
         message = nil
         isLoading = true
         defer {
@@ -41,7 +41,7 @@ final class CreateAccountViewModel: ObservableObject {
         }
         
         do {
-            try await authService.createAccount(email: email, password: password)
+            try await authService.createAccount(email: email, password: password, role: role)
             message = "Account created. You can now log in."
             clearForm()
             return true
