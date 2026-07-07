@@ -16,7 +16,7 @@ struct RoleSegmentedControl: View {
                 Button {
                     selection = role
                 } label: {
-                    Text(role.rawValue)
+                    Text(role.title)
                         .frame(maxWidth: .infinity)
                         .frame(height: 42)
                 }
