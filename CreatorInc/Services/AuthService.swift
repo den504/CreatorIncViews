@@ -33,7 +33,7 @@ struct SupabaseAuthService: AuthServicing {
     func login(email: String, password: String) async throws -> LoginResult {
         let response = try await client.auth.signIn(email: email, password: password)
         let profile: AccountProfile = try await client.database.from("profiles").select().eq("id", value: response.user.id).single().execute().value //user details is read with role
-        return LoginResult(role: profile.role)
+        return LoginResult(role: profile.role, email: response.user.email ?? "")
         
     }
 }

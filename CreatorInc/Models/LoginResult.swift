@@ -9,4 +9,5 @@ import Foundation
 
 struct LoginResult: Sendable {
     let role: AccountRole
+    let email: String
 }

@@ -19,9 +19,10 @@ final class LoginViewModel: ObservableObject {
     private let validator = AuthCredentialsValidator()
     private let authService: AuthServicing
     
-    init(authService: AuthServicing, message: String? = nil){
+    init(authService: AuthServicing, message: String? = nil, initialEmail: String  = ""){
         self.authService = authService
         self.message = message
+        self.email = initialEmail
     }
     
     func login() async -> LoginResult? {

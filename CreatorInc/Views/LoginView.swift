@@ -14,7 +14,7 @@ struct LoginView: View {
     
     @StateObject private var viewModel: LoginViewModel
     
-    init(onBack: @escaping () -> Void, message: String?, onLoginSucceeded: @escaping(LoginResult) -> Void) {
+    init(onBack: @escaping () -> Void, message: String?, initialEmail: String = "", onLoginSucceeded: @escaping(LoginResult) -> Void) {
         self.onBack = onBack
         self.message = message
         self.onLoginSucceeded = onLoginSucceeded
@@ -27,7 +27,7 @@ struct LoginView: View {
             service = UnavailableAuthService()
         }
         self._viewModel = StateObject(
-            wrappedValue: LoginViewModel(authService: service, message: message)
+            wrappedValue: LoginViewModel(authService: service, message: message, initialEmail: initialEmail)
         )
     }
     

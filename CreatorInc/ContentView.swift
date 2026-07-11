@@ -11,6 +11,7 @@ struct ContentView: View {
     @State private var activeScreen: ActiveScreen = .welcome
     @State private var selectedRole: AccountRole = .creator
     @State private var loginMessage: String?
+    @State private var lastEmail: String = ""
 
     var body: some View {
         switch activeScreen {
@@ -36,14 +37,16 @@ struct ContentView: View {
             LoginView(
                 onBack: { activeScreen = .welcome },
                 message: loginMessage,
+                initialEmail: lastEmail,
                 onLoginSucceeded: { result in
-                    activeScreen = result.role == .creator ? .buildCreatorProfile : .brandPlaceholder
+                    lastEmail = result.email
+                    activeScreen = result.role == .creator ? .buildCreatorProfile : .buildBrandProfile
                 }
             )
         case .buildCreatorProfile:
-            BuildCreatorProfileView()
-        case .brandPlaceholder:
-            Text("Brand profile coming soon")
+            BuildCreatorProfileView(onBack: {activeScreen = .login})
+        case .buildBrandProfile:
+            BuildBrandProfileView(onBack: {activeScreen = .login})
             
         }
     }
@@ -54,7 +57,7 @@ private enum ActiveScreen {
     case createAccount
     case login
     case buildCreatorProfile
-    case brandPlaceholder
+    case buildBrandProfile
 }
 
 struct ContentView_Previews: PreviewProvider {
