@@ -8,11 +8,8 @@
 import SwiftUI
 
 struct BuildCreatorProfileView: View {
-    @State private var fullName = ""
-    @State private var selectedCategory = "Travel"
-    @State private var message: String?
-
-    private let categories = ["Travel", "Lifestyle", "Beauty", "Tech", "Food"]
+    let onBack: ()  -> Void
+    @StateObject private var viewModel = BuildCreatorProfileViewModel()
 
     var body: some View {
         ZStack {
@@ -28,7 +25,7 @@ struct BuildCreatorProfileView: View {
                 profileFields
                     .padding(.bottom, 20)
 
-                if let message {
+                if let message = viewModel.message {
                     Text(message)
                         .font(.system(size: 12, weight: .semibold))
                         .foregroundStyle(Color.creatorSecondaryText)
@@ -48,6 +45,12 @@ struct BuildCreatorProfileView: View {
     // [Clarity -> visual hierarchy -> screen title]
     private var header: some View {
         VStack(alignment: .leading, spacing: 6) {
+            HStack(spacing: 8){
+                Button(action: onBack){
+                    Image(systemName: "chevron.left")
+                }
+                Text("Back")
+            }
             Text("Build your profile")
                 .font(.system(size: 28, weight: .bold, design: .rounded))
                 .foregroundStyle(.white)
@@ -61,7 +64,7 @@ struct BuildCreatorProfileView: View {
     // [Feedback -> direct manipulation -> tappable photo placeholder]
     private var photoButton: some View {
         Button {
-            message = "Photo upload will come next."
+            viewModel.message = "Photo upload will come next."
         } label: {
             VStack(spacing: 8) {
                 Image(systemName: "camera.fill")
@@ -91,7 +94,7 @@ struct BuildCreatorProfileView: View {
             AccountTextField(
                 title: "Jess Miller",
                 systemImage: "person.fill",
-                text: $fullName
+                text: $viewModel.fullName
             )
 
             ProfileFieldLabel("Category")
@@ -103,15 +106,15 @@ struct BuildCreatorProfileView: View {
     // [Clarity -> standard controls -> category chips]
     private var categoryGrid: some View {
         LazyVGrid(columns: [GridItem(.adaptive(minimum: 92), spacing: 10)], spacing: 10) {
-            ForEach(categories, id: \.self) { category in
+            ForEach(viewModel.categories, id: \.self) { category in
                 Button {
-                    selectedCategory = category
+                    viewModel.selectedCategory = category
                 } label: {
                     Text(category)
                         .frame(maxWidth: .infinity)
                         .frame(height: 38)
                 }
-                .buttonStyle(CategoryChipStyle(isSelected: selectedCategory == category))
+                .buttonStyle(CategoryChipStyle(isSelected: viewModel.selectedCategory == category))
             }
         }
     }
@@ -119,7 +122,7 @@ struct BuildCreatorProfileView: View {
     // [Feedback -> status communication -> local flow confirmation]
     private var saveButton: some View {
         Button {
-            message = fullName.isEmpty ? "Add your full name to continue." : "Profile form is ready to save."
+            viewModel.message = viewModel.fullName.isEmpty ? "Add your full name to continue." : "Profile form is ready to save."
         } label: {
             Text("Save & Continue")
                 .frame(maxWidth: .infinity)
