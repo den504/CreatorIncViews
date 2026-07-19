@@ -7,14 +7,28 @@
 
 import SwiftUI
 
+
 struct BuildBrandProfileView: View {
     let onBack: () -> Void
-    @StateObject private var viewModel = BuildBrandProfileViewModel()
+    @StateObject private var viewModel: BuildBrandProfileViewModel
+    let onProfileSaved: (BrandProfile) -> Void
+    
+    init(profile: BrandProfile? = nil,onBack: @escaping () -> Void, onProfileSaved: @escaping(BrandProfile) -> Void ) {
+        self.onBack = onBack
+        self.onProfileSaved = onProfileSaved
+        let service: ProfileServicing
+        if let config = SupabaseConfig.config {
+            service = SupabaseProfileService(config: config)
+        } else {
+            service = UnavailableProfileService()
+        }
+        _viewModel = StateObject(wrappedValue: BuildBrandProfileViewModel(profileService: service, profile: profile))
+    }
     
     
     var body: some View {
         ZStack {
-            Color.black.ignoresSafeArea()
+            Color.creatorBackground.ignoresSafeArea()
             
             ScrollView {
                 VStack(alignment: .leading, spacing: 24){
@@ -22,7 +36,7 @@ struct BuildBrandProfileView: View {
                     profileFields //computed property2
                     saveButton
                     
-                }
+                }.foregroundStyle(.white)
             }
         }
     }
@@ -55,6 +69,12 @@ struct BuildBrandProfileView: View {
                 .foregroundStyle(.gray)
             TextEditor(text: $viewModel.brandIntro)
                 .frame(height: 100)
+                .padding(10)
+                .scrollContentBackground(.hidden)
+                .background(Color.creatorInput)
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+                .foregroundStyle(.white)
+                .colorScheme(.dark)
             Text("INDUSTRY/CATEGORY")
                 .font(.system(size: 11, weight: .bold))
                 .foregroundStyle(.gray)
@@ -80,12 +100,25 @@ struct BuildBrandProfileView: View {
     }
     
     private var saveButton: some View {
-        Button("Save and view profile") {}
+        Button {
+            Task {
+                if let profile = await viewModel.save() {
+                    onProfileSaved(profile)
+                }
+            }
+        } label: {
+            Text(viewModel.isLoading ? "Saving..." : "Save and view profile")
+        }
             .frame(maxWidth: .infinity)
             .padding()
             .background(Color.blue)
             .foregroundStyle(.white)
             .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+            .disabled(viewModel.isLoading)
     }
+    
+    
+    
+
     
 }

@@ -6,10 +6,29 @@
 //
 
 import SwiftUI
+import PhotosUI
 
 struct BuildCreatorProfileView: View {
     let onBack: ()  -> Void
-    @StateObject private var viewModel = BuildCreatorProfileViewModel()
+    @StateObject private var viewModel: BuildCreatorProfileViewModel
+    let onProfileSaved: (CreatorProfile) -> Void
+    @State private var selectedPhotoItem: PhotosPickerItem?
+    
+    //The custom init is used to create the view model with the required service before the view appears
+    init(profile: CreatorProfile? = nil, onBack: @escaping() -> Void, onProfileSaved: @escaping(CreatorProfile)-> Void){
+        self.onBack = onBack
+        let config = SupabaseConfig.config
+        let service: ProfileServicing
+        self.onProfileSaved = onProfileSaved
+        
+        if let config {
+            service = SupabaseProfileService(config: config)
+        }else{
+            service = UnavailableProfileService()
+        }
+        
+        _viewModel = StateObject(wrappedValue: BuildCreatorProfileViewModel(profileService: service, profile: profile))
+    }
 
     var body: some View {
         ZStack {
@@ -42,7 +61,7 @@ struct BuildCreatorProfileView: View {
         }
     }
 
-    // [Clarity -> visual hierarchy -> screen title]
+
     private var header: some View {
         VStack(alignment: .leading, spacing: 6) {
             HStack(spacing: 8){
@@ -50,6 +69,7 @@ struct BuildCreatorProfileView: View {
                     Image(systemName: "chevron.left")
                 }
                 Text("Back")
+                    .foregroundStyle(.white)
             }
             Text("Build your profile")
                 .font(.system(size: 28, weight: .bold, design: .rounded))
@@ -61,32 +81,50 @@ struct BuildCreatorProfileView: View {
         }
     }
 
-    // [Feedback -> direct manipulation -> tappable photo placeholder]
     private var photoButton: some View {
-        Button {
-            viewModel.message = "Photo upload will come next."
-        } label: {
+        //opens photo library, loads and prepares the selected photo
+        PhotosPicker(selection: $selectedPhotoItem, matching: .images) {
             VStack(spacing: 8) {
-                Image(systemName: "camera.fill")
-                    .font(.system(size: 22, weight: .bold))
-
-                Text("Add photo")
+                photoPreview
+                    .frame(width: 92, height: 92)
+                    .clipShape(Circle())
+                    .overlay { Circle().stroke(Color.white.opacity(0.2)) }
+                Text("Add or change photo")
                     .font(.system(size: 12, weight: .bold))
             }
             .foregroundStyle(Color.creatorSecondaryText)
-            .frame(width: 92, height: 92)
         }
-        .background {
-            RoundedRectangle(cornerRadius: 18, style: .continuous)
-                .fill(Color.creatorButton)
-                .overlay {
-                    RoundedRectangle(cornerRadius: 18, style: .continuous)
-                        .stroke(Color.white.opacity(0.08), lineWidth: 1)
-                }
+        .task(id: selectedPhotoItem) { //helper to compress image
+            guard let item = selectedPhotoItem else { return }
+            guard let data = try? await item.loadTransferable(type: Data.self),//photo transforms to Data
+                  let jpegData = ProfileImageProcessor.jpegData(from: data) else {
+                viewModel.message = "Could not load that photo."
+                return
+            }
+            viewModel.selectedPhotoJPEGData = jpegData
+            viewModel.message = nil
+        }
+    }
+    
+    @ViewBuilder
+    private var photoPreview: some View { //displays the selected photo
+        if let data = viewModel.selectedPhotoJPEGData,
+           let image = UIImage(data: data) {
+            Image(uiImage: image)
+                .resizable()
+                .scaledToFill()
+        } else if let urlText = viewModel.profilePhotoURL,
+                  let url = URL(string: urlText) {
+            AsyncImage(url: url) { image in
+                image.resizable().scaledToFill()
+            } placeholder: {
+                Image(systemName: "person.crop.circle")
+            }
+        } else {
+            Image(systemName: "camera.fill")
         }
     }
 
-    // [SoC -> SwiftUI composition -> grouped form fields]
     private var profileFields: some View {
         VStack(alignment: .leading, spacing: 14) {
             ProfileFieldLabel("Full name")
@@ -96,6 +134,16 @@ struct BuildCreatorProfileView: View {
                 systemImage: "person.fill",
                 text: $viewModel.fullName
             )
+            
+            ProfileFieldLabel("About you")
+
+            TextEditor(text: $viewModel.bio) 
+                .frame(height: 100)
+                .padding(10)
+                .scrollContentBackground(.hidden)
+                .background(Color.creatorInput)
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+                .foregroundStyle(.white)
 
             ProfileFieldLabel("Category")
 
@@ -103,7 +151,7 @@ struct BuildCreatorProfileView: View {
         }
     }
 
-    // [Clarity -> standard controls -> category chips]
+   
     private var categoryGrid: some View {
         LazyVGrid(columns: [GridItem(.adaptive(minimum: 92), spacing: 10)], spacing: 10) {
             ForEach(viewModel.categories, id: \.self) { category in
@@ -119,15 +167,19 @@ struct BuildCreatorProfileView: View {
         }
     }
 
-    // [Feedback -> status communication -> local flow confirmation]
     private var saveButton: some View {
         Button {
-            viewModel.message = viewModel.fullName.isEmpty ? "Add your full name to continue." : "Profile form is ready to save."
+//            viewModel.message = viewModel.fullName.isEmpty ? "Add your full name to continue." : "Profile form is ready to save."
+            Task{
+                if let profile = await viewModel.save(){
+                    onProfileSaved(profile)
+                }
+            }
         } label: {
-            Text("Save & Continue")
+            Text(viewModel.isLoading ? "Saving..." : "Save & Continue")
                 .frame(maxWidth: .infinity)
         }
-        .buttonStyle(PrimaryActionButtonStyle())
+        .buttonStyle(PrimaryActionButtonStyle()).disabled(viewModel.isLoading)
     }
 }
 
