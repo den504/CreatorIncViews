@@ -13,7 +13,7 @@ import Foundation
 //logic on the views , simple do
 //let error = AuthValidation.missingEmail
 //print(error.localizedDescription)
-enum AuthValidationError: LocalizedError {
+enum AuthValidationError: LocalizedError { 
     case missingEmail
     case missingPassword
     case weakPassword
