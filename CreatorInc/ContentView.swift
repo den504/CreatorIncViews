@@ -66,10 +66,13 @@ struct ContentView: View {
             if let brandProfile { // [SoC → parent state → saved brand]
                 BrandProfileView(
                     profile: brandProfile,
-                    onEdit: { activeScreen = .buildBrandProfile }, onBack: {activeScreen = .creatorHome})
+                    onEdit: { activeScreen = .buildBrandProfile }, onBack: {activeScreen = .brandHome})
             }
         case .loadingProfile:
             ProgressView("Loading profile")
+        
+        case .brandHome:
+            BrandMainTabView()
             
         }
 
@@ -111,6 +114,7 @@ private enum ActiveScreen {
     case brandProfile
     case loadingProfile
     case creatorHome
+    case brandHome
 }
 
 struct ContentView_Previews: PreviewProvider {
