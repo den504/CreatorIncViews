@@ -6,11 +6,35 @@
 //
 
 import SwiftUI
+import PhotosUI //enables PhotoPicker
 
 struct CreatorProfileView: View {
+    @StateObject private var shortsViewModel: CreatorShortsViewModel
+    @State private var selectedItem: PhotosPickerItem?
+    @State private var selectedShort: CreatorShort?
+    @State private var shortPendingDelete: CreatorShort?
+    @State private var isShowingDeleteConfirmation = false
+    
     let profile: CreatorProfile
     let onEdit: () -> Void
     let onBack: () -> Void
+    
+    init(profile: CreatorProfile, onEdit: @escaping () -> Void, onBack: @escaping () -> Void) {
+        self.profile = profile
+        self.onEdit = onEdit
+        self.onBack = onBack
+        let service: VideoServicing
+        
+        if let config = SupabaseConfig.config {
+            service = SupabaseVideoService(config: config)
+        } else {
+            service = UnavailableVideoService()
+        }
+        _shortsViewModel = StateObject(wrappedValue: CreatorShortsViewModel(videoService: service))
+    }
+    
+    
+    
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
@@ -26,7 +50,7 @@ struct CreatorProfileView: View {
                     .clipShape(Circle())
                 }
                 Text(profile.displayName)
-                if let bio = profile.bio, !bio.isEmpty { 
+                if let bio = profile.bio, !bio.isEmpty {
                     Text(bio)
                         .font(.subheadline)
                         .foregroundStyle(Color.creatorSecondaryText)
@@ -40,10 +64,10 @@ struct CreatorProfileView: View {
                 shortsSection
             }
         }
-            .padding(24)
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-            .background(Color.creatorBackground.ignoresSafeArea())
-            .foregroundStyle(.white)
+        .padding(24)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+        .background(Color.creatorBackground.ignoresSafeArea())
+        .foregroundStyle(.white)
     }
     
     private var header: some View {
@@ -80,45 +104,99 @@ struct CreatorProfileView: View {
         }
     }
     
-    private var shortsHeader: some View { //shorts
+    private var shortsHeader: some View {
         HStack {
             Text("Shorts").font(.headline)
             Spacer()
-            Text("See all")
+            PhotosPicker(selection: $selectedItem, matching: .videos) {
+                Image(systemName: "plus.circle.fill")
+                    .foregroundStyle(Color.creatorPrimary)
+            }
+            Text("Upload")
                 .font(.caption.bold())
                 .foregroundStyle(Color.creatorPrimary)
         }
+        .onChange(of: selectedItem) { _, newItem in //moves video from IOS disk to apps using LoadTansferable in utilities
+            guard let newItem else { return }
+            Task {
+                do {
+                    guard let video = try await newItem.loadTransferable(type: PickedVideo.self) else { return }
+                    await shortsViewModel.uploadShort(from: video.url)
+                } catch {
+                    shortsViewModel.message = error.localizedDescription
+                }
+            }
+        }
     }
+
     
-    private func shortThumbnail(color: Color) -> some View { //Thumb nails for shorts
+    private func shortThumbnail(url: String) -> some View { //Thumb nails for shorts, gets the url from short card
         ZStack {
-            RoundedRectangle(cornerRadius: 10).fill(color)
+            AsyncImage(url: URL(string: url)) { image in
+                image.resizable().scaledToFill()
+            } placeholder: {
+                Color.creatorCard
+            }
             Image(systemName: "play.fill")
                 .font(.caption.bold()).padding(12)
                 .background(Color.creatorPrimary)
                 .clipShape(Circle())
         }
         .frame(height: 110)
-    }
-    private func shortCard(title: String, views: String, age: String, color: Color) -> some View {
-        VStack(alignment: .leading, spacing: 7) {
-            shortThumbnail(color: color) //play button thumbnail
-            Text(views).font(.caption2.bold()).padding(4).background(.black.opacity(0.7)).clipShape(Capsule())
-            Text(title).font(.caption).lineLimit(2)
-            Text(age).font(.caption2).foregroundStyle(Color.creatorMuted)
-        }
-        .frame(maxWidth: .infinity, alignment: .leading).padding(8)
-        .background(Color.creatorCard).clipShape(RoundedRectangle(cornerRadius: 12))
-    }
-    private var shortsSection: some View { //short section has both short card and short card has thumb nail
-        HStack(alignment: .top, spacing: 10) {
-            shortCard(title: "Hidden beaches of Cape Verde", views: "41.2K views",
-                      age: "3 days ago", color: .blue.opacity(0.25))
-            shortCard(title: "Safari gear essentials 2024", views: "28.7K views",
-                      age: "1 week ago", color: .green.opacity(0.25))
-        }
+        .clipShape(RoundedRectangle(cornerRadius: 10))
     }
     
+    private func shortCard(short: CreatorShort) -> some View {
+        Button {
+            selectedShort = short
+        } label : {
+            VStack(alignment: .leading, spacing: 7) {
+                shortThumbnail(url: short.thumbnailURL)
+                Text(short.createdAt.formatted(.relative(presentation: .named)))
+                    .font(.caption).foregroundStyle(Color.creatorMuted)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading).padding(8)
+            .background(Color.creatorCard).clipShape(RoundedRectangle(cornerRadius: 12))
+        }
+        .contextMenu{ //confirms deletion is about to happen
+            Button(role: .destructive){
+                shortPendingDelete = short
+                isShowingDeleteConfirmation  = true
+            }label:{
+                Label("Delete", systemImage: "trash")
+            }
+        }
+    }
+    private var shortsSection: some View {
+        Group {
+            if shortsViewModel.isLoading && shortsViewModel.shorts.isEmpty {
+                ProgressView()
+            } else if shortsViewModel.shorts.isEmpty {
+                Text("No shorts yet — add your first video")
+                    .font(.caption)
+                    .foregroundStyle(Color.creatorMuted)
+            } else {
+                LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 10) {
+                    ForEach(shortsViewModel.shorts) { short in
+                        shortCard(short: short)
+                    }
+                }
+            }
+            if let message = shortsViewModel.message {
+                Text(message).font(.caption).foregroundStyle(.red)
+            }
+        }
+        .task { await shortsViewModel.loadShorts() }
+        .sheet(item: $selectedShort) { short in
+            ShortPlayerView(short: short)
+        }
+        .confirmationDialog("Delete this short?", isPresented: $isShowingDeleteConfirmation, titleVisibility: .visible) {
+            Button("Delete", role: .destructive) {
+                if let shortPendingDelete {
+                    Task { await shortsViewModel.deleteShort(shortPendingDelete) }
+                }
+            }
+        }
+    }
 }
-
 
