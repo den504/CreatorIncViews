@@ -8,9 +8,11 @@
 import SwiftUI
 
 struct BrandMainTabView: View {
+    let onProfileTapped: () -> Void
+    
     var body: some View {
         TabView {
-            Text("Hello World — Home").tabItem { Label("Home", systemImage: "house") }
+            BrandHomeView(onProfileTapped: onProfileTapped).tabItem { Label("Home", systemImage: "house") }
             Text("Hello World — Discover").tabItem { Label("Discover", systemImage: "magnifyingglass") }
             MyGigsView().tabItem { Label("My Gigs", systemImage: "briefcase") }
             Text("Hello World — Messages").tabItem { Label("Messages", systemImage: "message") }

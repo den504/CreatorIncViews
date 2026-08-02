@@ -16,65 +16,71 @@ struct ContentView: View {
     @State private var brandProfile: BrandProfile?
 
     var body: some View {
-        switch activeScreen {
-        case .welcome:
-            WelcomeView(
-                onRoleSelected: {
-                    role in
-                    selectedRole = role
-                    activeScreen = .createAccount
-                },
-                onLoginSelected: { loginMessage = nil
-                    activeScreen = .login
+    
+        Group {
+            switch activeScreen {
+            case .welcome:
+                WelcomeView(
+                    onRoleSelected: {
+                        role in
+                        selectedRole = role
+                        activeScreen = .createAccount
+                    },
+                    onLoginSelected: { loginMessage = nil
+                        activeScreen = .login
+                    }
+                )
+            case .createAccount:
+                CreateAccountView(
+                    selectedRole: $selectedRole,
+                    onBack: { activeScreen = .welcome },
+                    onAccountCreated: { loginMessage = "Account created. You can now log in."
+                        activeScreen = .login }
+                )
+            case .login:
+                LoginView(
+                    onBack: { activeScreen = .welcome },
+                    message: loginMessage,
+                    initialEmail: lastEmail,
+                    onLoginSucceeded: { result in
+                        lastEmail = result.email
+                        loginMessage = nil
+                        activeScreen = .loadingProfile
+                        Task { await loadProfile(for: result.role) }
+                    }
+                )
+            case .buildCreatorProfile:
+                BuildCreatorProfileView(profile: creatorProfile, onBack: {activeScreen = creatorProfile == nil ? .login : .creatorProfile }, onProfileSaved: {profile in
+                    creatorProfile = profile
+                    activeScreen = .creatorProfile //from the case statement
+                })
+            case .buildBrandProfile:
+                BuildBrandProfileView(profile: brandProfile, onBack: {activeScreen = brandProfile == nil ? .login : .brandProfile}, onProfileSaved: {profile in brandProfile = profile
+                    activeScreen = .brandProfile
+                })
+            case .creatorHome:
+                CreatorMainTabView(onLogin: { activeScreen = .login }, onProfileTapped: {activeScreen = .creatorProfile})
+            case .creatorProfile:
+                if let creatorProfile { //reused from BuildCreatorProfileView
+                    CreatorProfileView(profile: creatorProfile, onEdit: {activeScreen = .buildCreatorProfile}, onBack: {activeScreen = .creatorHome})
                 }
-            )
-        case .createAccount:
-            CreateAccountView(
-                selectedRole: $selectedRole,
-                onBack: { activeScreen = .welcome },
-                onAccountCreated: { loginMessage = "Account created. You can now log in."
-                    activeScreen = .login }
-            )
-        case .login:
-            LoginView(
-                onBack: { activeScreen = .welcome },
-                message: loginMessage,
-                initialEmail: lastEmail,
-                onLoginSucceeded: { result in
-                    lastEmail = result.email
-                    loginMessage = nil
-                    activeScreen = .loadingProfile
-                    Task { await loadProfile(for: result.role) }
+            case .brandProfile:
+                if let brandProfile { // [SoC → parent state → saved brand]
+                    BrandProfileView(
+                        profile: brandProfile,
+                        onEdit: { activeScreen = .buildBrandProfile }, onBack: {activeScreen = .brandHome})
                 }
-            )
-        case .buildCreatorProfile:
-            BuildCreatorProfileView(profile: creatorProfile, onBack: {activeScreen = .login }, onProfileSaved: {profile in
-                creatorProfile = profile
-                activeScreen = .creatorProfile //from the case statement
-            })
-        case .buildBrandProfile:
-            BuildBrandProfileView(profile: brandProfile, onBack: {activeScreen = brandProfile == nil ? .login : .brandProfile}, onProfileSaved: {profile in brandProfile = profile
-            activeScreen = .brandProfile
-        })
-        case .creatorHome:
-            CreatorMainTabView(onLogin: { activeScreen = .login })
-        case .creatorProfile:
-            if let creatorProfile { //reused from BuildCreatorProfileView
-                CreatorProfileView(profile: creatorProfile, onEdit: {activeScreen = .buildCreatorProfile}, onBack: {activeScreen = .creatorHome})
+            case .loadingProfile:
+                ProgressView("Loading profile")
+                
+            case .brandHome:
+                BrandMainTabView(onProfileTapped: {activeScreen = .brandProfile})
+                
             }
-        case .brandProfile:
-            if let brandProfile { // [SoC → parent state → saved brand]
-                BrandProfileView(
-                    profile: brandProfile,
-                    onEdit: { activeScreen = .buildBrandProfile }, onBack: {activeScreen = .brandHome})
-            }
-        case .loadingProfile:
-            ProgressView("Loading profile")
-        
-        case .brandHome:
-            BrandMainTabView()
             
-        }
+        }.background(Color.creatorBackground.ignoresSafeArea())
+            .preferredColorScheme(activeScreen.isPostLogin ? .dark : nil)
+
 
     }
     
@@ -91,11 +97,11 @@ struct ContentView: View {
             switch role {
             case .creator:
                 creatorProfile = try await service.fetchCreatorProfile()
-                activeScreen = creatorProfile == nil ? .buildCreatorProfile : .creatorProfile
+                activeScreen = creatorProfile == nil ? .buildCreatorProfile : .creatorHome
 
             case .brand:
                 brandProfile = try await service.fetchBrandProfile()
-                activeScreen = brandProfile == nil ? .buildBrandProfile : .brandProfile
+                activeScreen = brandProfile == nil ? .buildBrandProfile : .brandHome
             }
         } catch {
             loginMessage = error.localizedDescription
@@ -115,10 +121,14 @@ private enum ActiveScreen {
     case loadingProfile
     case creatorHome
     case brandHome
-}
-
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView()
+    
+    var isPostLogin: Bool {
+        switch self {
+        case .welcome, .createAccount, .login: return false
+        default: return true
+        }
     }
 }
+
+
+
