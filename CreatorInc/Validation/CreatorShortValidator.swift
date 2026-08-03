@@ -27,4 +27,9 @@ struct CreatorShortValidator {
         let duration = try await AVURLAsset(url: url).load(.duration).seconds
         guard duration <= 30 else { throw CreatorShortValidationError.videoTooLong}
     }
+    
+    func optionalText(_ value: String) -> String? {
+        let trimmed = value.trimmingCharacters(in: .whitespacesAndNewlines)
+        return trimmed.isEmpty ? nil : trimmed
+    }
 }

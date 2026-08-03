@@ -14,6 +14,7 @@ struct CreatorProfileView: View {
     @State private var selectedShort: CreatorShort?
     @State private var shortPendingDelete: CreatorShort?
     @State private var isShowingDeleteConfirmation = false
+    @State private var pickedVideo: PickedVideoSheetItem?
     
     let profile: CreatorProfile
     let onEdit: () -> Void
@@ -121,7 +122,8 @@ struct CreatorProfileView: View {
             Task {
                 do {
                     guard let video = try await newItem.loadTransferable(type: PickedVideo.self) else { return }
-                    await shortsViewModel.uploadShort(from: video.url)
+//                    await shortsViewModel.uploadShort(from: video.url)
+                    pickedVideo = PickedVideoSheetItem(url: video.url)
                 } catch {
                     shortsViewModel.message = error.localizedDescription
                 }
@@ -190,6 +192,9 @@ struct CreatorProfileView: View {
         .sheet(item: $selectedShort) { short in
             ShortPlayerView(short: short)
         }
+        .sheet(item: $pickedVideo) { item in
+            NewShortView(videoURL: item.url, viewModel: shortsViewModel)
+            }
         .confirmationDialog("Delete this short?", isPresented: $isShowingDeleteConfirmation, titleVisibility: .visible) {
             Button("Delete", role: .destructive) {
                 if let shortPendingDelete {
@@ -198,5 +203,10 @@ struct CreatorProfileView: View {
             }
         }
     }
+}
+
+private struct PickedVideoSheetItem: Identifiable {
+    let id = UUID()
+    let url: URL
 }
 

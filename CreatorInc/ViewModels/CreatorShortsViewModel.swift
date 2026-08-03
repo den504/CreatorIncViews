@@ -30,7 +30,7 @@ class CreatorShortsViewModel: ObservableObject {
         }
     }
     
-    func uploadShort (from url: URL) async { //url --> //local path on your device
+    func uploadShort (from url: URL, description: String) async { //url --> //local path on your device
         message = nil
         isLoading = true
         
@@ -39,10 +39,11 @@ class CreatorShortsViewModel: ObservableObject {
         }
         do {
             try await validator.validateDuration(url: url)
+            let description = validator.optionalText(description)
             let compressedURL = try await CreatorShortVideoProcessor.compress(url: url)
             let videoData = try Data(contentsOf: compressedURL) //from foundations - reads raw bytes off disk given a local file url
             let thumbnailData = try await CreatorShortVideoProcessor.thumbnail(from: url)
-            let newShort = try await videoService.uploadShort(videoData: videoData, thumbnailData: thumbnailData)
+            let newShort = try await videoService.uploadShort(videoData: videoData, thumbnailData: thumbnailData, description: description)
             shorts.insert(newShort, at: 0) //videos stored locally
         } catch {
             message = error.localizedDescription
