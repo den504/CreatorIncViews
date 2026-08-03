@@ -10,7 +10,7 @@ import Supabase
 
 protocol VideoServicing {
     func fetchShorts() async throws -> [CreatorShort]
-    func uploadShort(videoData: Data, thumbnailData: Data) async throws -> CreatorShort
+    func uploadShort(videoData: Data, thumbnailData: Data, description: String?) async throws -> CreatorShort
     func deleteShort(id: UUID) async throws
 }
 
@@ -35,7 +35,7 @@ struct SupabaseVideoService: VideoServicing {
     }
     
     //
-    func uploadShort(videoData: Data, thumbnailData: Data) async throws -> CreatorShort {
+    func uploadShort(videoData: Data, thumbnailData: Data, description: String?) async throws -> CreatorShort {
         let userID = try await currentUserID()
         let shortUUID = UUID().uuidString.lowercased()
         let videoPath = "\(userID.uuidString.lowercased())/shorts/\(shortUUID).mp4"
@@ -51,7 +51,7 @@ struct SupabaseVideoService: VideoServicing {
         let thumbnailURL = try client.storage.from("creator-videos").getPublicURL(path: thumbnailPath).absoluteString
 
         // send data to creator shorts tables
-        let data = CreatorShortInsertData(userId: userID, videoURL: videoURL, thumbnailURL: thumbnailURL)
+        let data = CreatorShortInsertData(userId: userID, videoURL: videoURL, thumbnailURL: thumbnailURL, description: description)
         return try await client.database.from("creator_shorts").insert(data).select().single().execute().value
         // returns creator object
     }
@@ -65,7 +65,7 @@ struct SupabaseVideoService: VideoServicing {
 
 struct UnavailableVideoService: VideoServicing {
     func fetchShorts() async throws -> [CreatorShort] { throw AuthValidationError.missingSupabaseConfig }
-    func uploadShort(videoData: Data, thumbnailData: Data) async throws -> CreatorShort {
+    func uploadShort(videoData: Data, thumbnailData: Data, description: String?) async throws -> CreatorShort {
         throw AuthValidationError.missingSupabaseConfig
     }
     func deleteShort(id: UUID) async throws {
