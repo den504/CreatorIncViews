@@ -8,7 +8,7 @@
 import Foundation
 
 //reads saved data returned by superbase
-nonisolated struct CreatorProfile: Decodable, Sendable {
+nonisolated struct CreatorProfile: Decodable, Sendable, Identifiable {
     let id: UUID
     let userId: UUID
     let displayName: String

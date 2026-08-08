@@ -77,7 +77,7 @@ struct MyGigsView: View {
                     // which the form gives it and sends it to the DB
                 }
                 .sheet(item: $selectedGig){ gig in
-                    GigDetailView(gig: gig)
+                    GigDetailView(gig: gig, context: .brandOwner)
                 }
                 if let loadError {
                     Text(loadError)
