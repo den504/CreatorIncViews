@@ -13,7 +13,7 @@ struct BrandMainTabView: View {
     var body: some View {
         TabView {
             BrandHomeView(onProfileTapped: onProfileTapped).tabItem { Label("Home", systemImage: "house") }
-            Text("Hello World — Discover").tabItem { Label("Discover", systemImage: "magnifyingglass") }
+            DiscoverView().tabItem{Label("Discover", systemImage: "magnifyingglass")}
             MyGigsView().tabItem { Label("My Gigs", systemImage: "briefcase") }
             Text("Hello World — Messages").tabItem { Label("Messages", systemImage: "message") }
         }

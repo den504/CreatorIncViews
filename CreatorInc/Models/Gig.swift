@@ -19,6 +19,7 @@ nonisolated struct Gig: Decodable, Sendable, Identifiable {
     let deliverables: [String]
     let tags: [String]
     let interestedCount: Int
+    let companyName: String?
     
     enum CodingKeys: String, CodingKey {
         case id, title, status, budget, brief, tags
@@ -27,6 +28,7 @@ nonisolated struct Gig: Decodable, Sendable, Identifiable {
         case requirements
         case deliverables
         case interestedCount = "interested_count"
+        case companyName = "company_name"
     }
     
 }
