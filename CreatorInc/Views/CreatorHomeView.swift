@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct CreatorHomeView: View {
-    let onLogin: () -> Void
     let onProfileTapped: () -> Void
+    let onSignOut: () -> Void
     
     var body: some View {
         NavigationStack{
@@ -17,12 +17,17 @@ struct CreatorHomeView: View {
                 Color.creatorBackground.ignoresSafeArea()
                 VStack(spacing: 20) {
                     Text("Hello World")
-                    Button("Login", action: onLogin)
                 }.toolbar {
                     ToolbarItem(placement: .topBarTrailing){
                         Button(action: onProfileTapped){
                             Image(systemName: "person.crop.circle")
                         }
+                    }
+                    ToolbarItem(placement: .topBarLeading) {
+                        Button(action: onSignOut) {
+                            Image(systemName: "rectangle.portrait.and.arrow.right")
+                        }
+                        .accessibilityLabel("Sign out")
                     }
                 }
             }

@@ -8,15 +8,15 @@
 import SwiftUI
 
 struct CreatorMainTabView: View {
-    let onLogin: () -> Void
     let onProfileTapped: () -> Void
+    let onSignOut: () -> Void
     
     var body: some View {
         
-        TabView { // [Consistency → native navigation → TabView]
-            CreatorHomeView(onLogin: onLogin, onProfileTapped: onProfileTapped).tabItem { Label("Home", systemImage: "house") }
-            DiscoverView().tabItem {Label("Discover", systemImage: "magnifyingglass")}
-            Text("Hello World — My Gigs").tabItem { Label("My Gigs", systemImage: "briefcase") }
+        TabView {
+            CreatorHomeView(onProfileTapped: onProfileTapped, onSignOut: onSignOut).tabItem { Label("Home", systemImage: "house") }
+            DiscoverView(role: .creator).tabItem {Label("Discover", systemImage: "magnifyingglass")}
+            CreatorMyGigsView().tabItem { Label("My Gigs", systemImage: "briefcase") }
             Text("Hello World — Messages").tabItem { Label("Messages", systemImage: "message") }
         }
     }

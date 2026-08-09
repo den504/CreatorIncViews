@@ -11,9 +11,11 @@ struct DiscoverView: View {
     @StateObject private var viewModel: DiscoverViewModel
     @State private var selectedCreator: CreatorProfile?
     @State private var selectedGig: Gig?
+    let role: AccountRole
 
-    init() {
+    init(role: AccountRole) {
         let service: DiscoverServicing
+        self.role = role
 
         if let config = SupabaseConfig.config {
             service = SupabaseDiscoverService(config: config)
@@ -59,7 +61,7 @@ struct DiscoverView: View {
             CreatorDetailView(profile: creator)
         }
         .sheet(item: $selectedGig) { gig in
-            GigDetailView(gig: gig, context: .discover)
+            GigDetailView(gig: gig, context: gigDetailContext)
         }
     }
 
@@ -164,10 +166,18 @@ struct DiscoverView: View {
             .padding(.bottom)
         }
     }
+    
+    
+    private var gigDetailContext: GigDetailContext {
+        switch role {
+        case .creator: .discover
+        case .brand: .brandDiscover
+        }
+    }
 }
 
 
-private struct DiscoverCreatorCard: View {//reuseable creator card
+struct DiscoverCreatorCard: View {//reuseable creator card
     let profile: CreatorProfile
 
     private var photoURL: URL? {
@@ -215,7 +225,7 @@ private struct DiscoverCreatorCard: View {//reuseable creator card
         )
     }
 
-    // [Accessibility → meaningful fallback → creator image]
+  
     private var creatorPhoto: some View {
         AsyncImage(url: photoURL) { image in
             image
@@ -241,7 +251,7 @@ private struct DiscoverCreatorCard: View {//reuseable creator card
     }
 }
 
-private struct DiscoverGigCard: View {//reuseable gig card
+struct DiscoverGigCard: View {//reuseable gig card
     let gig: Gig
 
     var body: some View {

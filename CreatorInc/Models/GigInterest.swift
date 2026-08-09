@@ -22,6 +22,7 @@ nonisolated struct GigInterest: Decodable, Sendable, Identifiable {
 }
 
 
+
 nonisolated struct GigInterestInsertData: Encodable, Sendable {
     let gigId: UUID
     let creatorUserId: UUID

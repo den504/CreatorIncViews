@@ -11,12 +11,15 @@ import SwiftUI
 nonisolated enum GigDetailContext {
     case discover
     case brandOwner
+    case creatorSaved
+    case brandDiscover
 }
 
 struct GigDetailView: View {
     let gig: Gig
     let context: GigDetailContext
     @StateObject private var interestViewModel: GigInterestViewModel
+    @State private var isShowingInterestedCreators = false
     
     @Environment(\.dismiss) private var dismiss
     
@@ -86,14 +89,21 @@ struct GigDetailView: View {
                 }
             }
             .task {
-                if context == .discover {
+                switch context {
+                case .discover:
                     await interestViewModel.loadInterestState(gigID: gig.id)
-                } else {
+                case .brandOwner:
                     await interestViewModel.loadInterestCount(gigID: gig.id)
+                case .creatorSaved, .brandDiscover:
+                    break
                 }
-                
             }
-
+        }
+        .sheet(isPresented: $isShowingInterestedCreators){
+            InterestedCreatorsView(
+                viewModel: interestViewModel,
+                gigID: gig.id
+            )
         }
     }
     
@@ -109,26 +119,32 @@ struct GigDetailView: View {
     }
     
     private var interestedCreatorsCard: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            Label("Interested Creators", systemImage: "person.2.fill").font(.headline)
-            Text("Review creators who expressed interest in this gig.")
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
-            interestedCountLabel
-                .font(.headline)
-                .foregroundStyle(Color.creatorPrimary)
-                .tint(Color.creatorPrimary)
-        }
-        .padding(16)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color.creatorCard)
-        .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
-        .overlay {
-            RoundedRectangle(cornerRadius: 14, style: .continuous)
-                .stroke(Color.white.opacity(0.08), lineWidth: 1)
-        }
+        Button {
+            isShowingInterestedCreators = true //changes to true once tapped and ensures sheet opens
+        } label : {
+            VStack(alignment: .leading, spacing: 4) {
+                Label("Interested Creators", systemImage: "person.2.fill").font(.headline)
+                Text("Review creators who expressed interest in this gig.")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                interestedCountLabel
+                    .font(.headline)
+                    .foregroundStyle(Color.creatorPrimary)
+                    .tint(Color.creatorPrimary)
+            }
+            .padding(16)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(Color.creatorCard)
+            .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+            .overlay {
+                RoundedRectangle(cornerRadius: 14, style: .continuous)
+                    .stroke(Color.white.opacity(0.08), lineWidth: 1)
+            }
+        }.buttonStyle(.plain)
+
 
     }
+    
     @ViewBuilder
     private var interestedCountLabel: some View {
         if let count = interestViewModel.interestCount {

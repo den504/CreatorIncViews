@@ -131,6 +131,8 @@ private final class AuthServiceSpy: AuthServicing {
     func login(email: String, password: String) async throws -> LoginResult {
         throw TestError.unexpectedLogin
     }
+    
+    func signOut() async throws {}
 
     func resumeCreateAccount() {
         createAccountContinuation?.resume()

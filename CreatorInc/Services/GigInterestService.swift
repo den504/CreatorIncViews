@@ -13,6 +13,8 @@ protocol GigInterestServicing {
     func fetchInterest(gigID: UUID) async throws -> GigInterest?
     func indicateInterest(gigID: UUID) async throws -> GigInterest
     func fetchInterestCount(gigID: UUID) async throws -> Int
+    func fetchInterestedCreators(gigID: UUID) async throws -> [CreatorProfile]
+    func fetchInterestedGigs() async throws -> [Gig]
 
 }
 
@@ -44,6 +46,18 @@ struct SupabaseGigInterestService: GigInterestServicing {
         let response = try await client.database.from("gig_interests").select("id", head: true, count: .exact).eq("gig_id", value: gigID).execute()
         return response.count ?? 0
     }
+    
+    func fetchInterestedCreators(gigID: UUID) async throws -> [CreatorProfile]{
+        try await client.database.from("gig_interests")//no need to use both creator_user_id and user_id for inner join as supabase can tell
+            .select("...creator_profiles!inner(id,user_id,display_name,niche,bio,profile_photo_url)")
+            .eq("gig_id", value: gigID).execute().value
+    }
+    func fetchInterestedGigs() async throws -> [Gig] {
+        let userID = try await currentUserID()
+        return try await client.database.from("gig_interests").select("...gigs!inner(*,...brand_profiles!inner(company_name))")
+            .eq("creator_user_id", value: userID).eq("gigs.status", value: GigStatus.open.rawValue)
+            .order("created_at", ascending: false).execute().value
+    }
 }
 
 
@@ -51,4 +65,6 @@ struct UnavailableGigInterestService: GigInterestServicing {
     func fetchInterest(gigID: UUID) async throws -> GigInterest? { throw AuthValidationError.missingSupabaseConfig }
     func indicateInterest(gigID: UUID) async throws -> GigInterest { throw AuthValidationError.missingSupabaseConfig }
     func fetchInterestCount(gigID: UUID) async throws -> Int { throw AuthValidationError.missingSupabaseConfig}
+    func fetchInterestedCreators(gigID: UUID) async throws -> [CreatorProfile] { throw AuthValidationError.missingSupabaseConfig}
+    func fetchInterestedGigs() async throws -> [Gig] { throw AuthValidationError.missingSupabaseConfig}
 }
