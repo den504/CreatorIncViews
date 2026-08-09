@@ -14,6 +14,8 @@ struct ContentView: View {
     @State private var lastEmail: String = ""
     @State private var creatorProfile: CreatorProfile?
     @State private var brandProfile: BrandProfile?
+    @State private var signOutErrorMessage = ""
+    @State private var isShowingSignOutError = false
 
     var body: some View {
     
@@ -59,7 +61,7 @@ struct ContentView: View {
                     activeScreen = .brandProfile
                 })
             case .creatorHome:
-                CreatorMainTabView(onLogin: { activeScreen = .login }, onProfileTapped: {activeScreen = .creatorProfile})
+                CreatorMainTabView(onProfileTapped: {activeScreen = .creatorProfile}, onSignOut: { Task { await signOut() } })
             case .creatorProfile:
                 if let creatorProfile { //reused from BuildCreatorProfileView
                     CreatorProfileView(profile: creatorProfile, onEdit: {activeScreen = .buildCreatorProfile}, onBack: {activeScreen = .creatorHome})
@@ -74,7 +76,7 @@ struct ContentView: View {
                 ProgressView("Loading profile")
                 
             case .brandHome:
-                BrandMainTabView(onProfileTapped: {activeScreen = .brandProfile})
+                BrandMainTabView(onProfileTapped: {activeScreen = .brandProfile}, onSignOut: { Task { await signOut() } })
                 
             }
             
@@ -106,6 +108,25 @@ struct ContentView: View {
         } catch {
             loginMessage = error.localizedDescription
             activeScreen = .login
+        }
+    }
+    
+    private func signOut() async {
+        guard let config = SupabaseConfig.config else {
+            signOutErrorMessage = "Supabase is unavailable."
+            isShowingSignOutError = true
+            return
+        }
+
+        do {
+            try await SupabaseAuthService(config: config).signOut()
+            creatorProfile = nil
+            brandProfile = nil
+            loginMessage = nil
+            activeScreen = .login
+        } catch {
+            signOutErrorMessage = error.localizedDescription
+            isShowingSignOutError = true
         }
     }
 }

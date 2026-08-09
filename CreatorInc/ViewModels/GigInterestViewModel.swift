@@ -15,6 +15,9 @@ final class GigInterestViewModel: ObservableObject {
     @Published private(set) var isLoading = false
     @Published private(set) var errorMessage: String?
     @Published private(set) var interestCount: Int? = nil
+    @Published private(set) var interestedCreators: [CreatorProfile] = []
+    @Published private(set) var isLoadingInterestedCreators = false
+    @Published private(set) var interestedCreatorsError: String?
 
 
     private let service: GigInterestServicing
@@ -80,4 +83,22 @@ final class GigInterestViewModel: ObservableObject {
             errorMessage = error.localizedDescription
         }
     }
+    
+    func loadInterestedCreators(gigID: UUID) async {
+        guard !isLoadingInterestedCreators else {
+            return
+        }
+        interestedCreatorsError = nil
+        isLoadingInterestedCreators = true
+        defer {
+            isLoadingInterestedCreators = false
+        }
+        do {
+            interestedCreators = try await service.fetchInterestedCreators(gigID: gigID)
+        } catch {
+            interestedCreatorsError = error.localizedDescription
+        }
+    }
+    
+    
 }

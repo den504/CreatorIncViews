@@ -12,6 +12,7 @@ import _Helpers
 protocol AuthServicing {
     func createAccount(email: String, password: String, role: AccountRole) async throws
     func login(email: String, password: String) async throws -> LoginResult
+    func signOut() async throws
 }
 
 struct SupabaseAuthService: AuthServicing {
@@ -36,6 +37,9 @@ struct SupabaseAuthService: AuthServicing {
         return LoginResult(role: profile.role, email: response.user.email ?? "")
         
     }
+    func signOut() async throws {
+        try await client.auth.signOut()
+    }
 }
 
 struct UnavailableAuthService: AuthServicing {
@@ -43,6 +47,9 @@ struct UnavailableAuthService: AuthServicing {
         throw AuthValidationError.missingSupabaseConfig
     }
     func login(email: String, password: String) async throws -> LoginResult {
+        throw AuthValidationError.missingSupabaseConfig
+    }
+    func signOut() async throws {
         throw AuthValidationError.missingSupabaseConfig
     }
 }

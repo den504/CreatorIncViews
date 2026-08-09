@@ -9,6 +9,7 @@ import SwiftUI
 
 struct BrandHomeView: View {
     let onProfileTapped: () -> Void
+    let onSignOut: () -> Void
 
     var body: some View {
         NavigationStack {
@@ -23,6 +24,12 @@ struct BrandHomeView: View {
                                 Image(systemName: "person.crop.circle")
                             }
                             
+                        }
+                        ToolbarItem(placement: .topBarLeading) {
+                            Button(action: onSignOut) {
+                                Image(systemName: "rectangle.portrait.and.arrow.right")
+                            }
+                            .accessibilityLabel("Sign out")
                         }
                     }
             }

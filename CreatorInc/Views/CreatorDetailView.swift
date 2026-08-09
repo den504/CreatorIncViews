@@ -25,15 +25,23 @@ struct CreatorDetailView: View {
     var body: some View {
         NavigationStack {
             ScrollView {
-                VStack(
-                    alignment: .leading,
-                    spacing: 24
-                ) {
-                    creatorPhoto
+                VStack(alignment: .leading, spacing: 24){
+                    HStack {
+                        creatorPhoto
+                        Spacer()
+                        Button{
+                            
+                        } label: {
+                            Label("Message creator", systemImage: "message.fill")
+                                .labelStyle(.iconOnly)
+                        }
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .buttonBorderShape(.circle)
+                    .controlSize(.large)
+                    .disabled(true)
                     creatorIdentity
-                    Button("Message") {}
-                        .buttonStyle(PrimaryActionButtonStyle())
-                        .disabled(true)
+
                     creatorBio
                 }
                 .frame(
