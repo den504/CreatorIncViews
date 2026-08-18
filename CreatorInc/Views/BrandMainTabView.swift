@@ -16,7 +16,7 @@ struct BrandMainTabView: View {
             BrandHomeView(onProfileTapped: onProfileTapped, onSignOut: onSignOut).tabItem { Label("Home", systemImage: "house") }
             DiscoverView(role: .brand).tabItem{Label("Discover", systemImage: "magnifyingglass")}
             MyGigsView().tabItem { Label("My Gigs", systemImage: "briefcase") }
-            Text("Hello World — Messages").tabItem { Label("Messages", systemImage: "message") }
+            ChatListView().tabItem {Label("Messages", systemImage: "message")}
         }
     }
 }
