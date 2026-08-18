@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>STREAM_API_KEY</key>
+	<string>bdt8j7mycp8d</string>
 	<key>SUPABASE_ANON_KEY</key>
 	<string>sb_publishable_nOvMGCSRb-Ua5THXgfpQMg_mMOc1gOE</string>
 	<key>SUPABASE_URL</key>

@@ -190,6 +190,7 @@ struct RoleSegmentButtonStyle: ButtonStyle {
 }
 
 struct PrimaryActionButtonStyle: ButtonStyle {
+    @Environment(\.isEnabled) private var isEnabled
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .font(.system(size: 16, weight: .bold))
@@ -199,6 +200,7 @@ struct PrimaryActionButtonStyle: ButtonStyle {
                 RoundedRectangle(cornerRadius: 14, style: .continuous)
                     .fill(Color.creatorPrimary)
             }
+            .opacity(isEnabled ? 1 : 0.5)
             .scaleEffect(configuration.isPressed ? 0.98 : 1)
             .animation(.spring(response: 0.25, dampingFraction: 0.75), value: configuration.isPressed)
     }

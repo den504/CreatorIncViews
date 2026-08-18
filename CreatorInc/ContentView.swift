@@ -99,10 +99,16 @@ struct ContentView: View {
             switch role {
             case .creator:
                 creatorProfile = try await service.fetchCreatorProfile()
+                if let creatorProfile {
+                    await connectChat(userId: creatorProfile.userId, displayName: creatorProfile.displayName, photoURL: creatorProfile.profilePhotoURL)
+                }
                 activeScreen = creatorProfile == nil ? .buildCreatorProfile : .creatorHome
 
             case .brand:
                 brandProfile = try await service.fetchBrandProfile()
+                if let brandProfile {
+                    await connectChat(userId: brandProfile.userId, displayName: brandProfile.companyName, photoURL: nil)
+                }
                 activeScreen = brandProfile == nil ? .buildBrandProfile : .brandHome
             }
         } catch {
@@ -120,6 +126,9 @@ struct ContentView: View {
 
         do {
             try await SupabaseAuthService(config: config).signOut()
+            if let streamConfig = StreamConfig.config {
+                await StreamChatService(supabaseConfig: config, streamConfig: streamConfig).disconnectUser()
+            }
             creatorProfile = nil
             brandProfile = nil
             loginMessage = nil
@@ -127,6 +136,19 @@ struct ContentView: View {
         } catch {
             signOutErrorMessage = error.localizedDescription
             isShowingSignOutError = true
+        }
+    }
+    
+    private func connectChat(userId: UUID, displayName: String, photoURL: String?) async {
+        guard let supabaseConfig = SupabaseConfig.config, let streamConfig = StreamConfig.config else{
+            return
+        }
+        let chatService = StreamChatService(supabaseConfig: supabaseConfig, streamConfig: streamConfig)
+        do {
+            try await chatService.connectUser(id: userId, name: displayName, imageURL: photoURL.flatMap(URL.init))
+        }catch {
+            print("Stream connect failed", error)
+            
         }
     }
 }

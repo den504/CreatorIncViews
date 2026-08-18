@@ -17,7 +17,7 @@ struct CreatorMainTabView: View {
             CreatorHomeView(onProfileTapped: onProfileTapped, onSignOut: onSignOut).tabItem { Label("Home", systemImage: "house") }
             DiscoverView(role: .creator).tabItem {Label("Discover", systemImage: "magnifyingglass")}
             CreatorMyGigsView().tabItem { Label("My Gigs", systemImage: "briefcase") }
-            Text("Hello World — Messages").tabItem { Label("Messages", systemImage: "message") }
+            ChatListView().tabItem {Label("Messages", systemImage: "message")}
         }
     }
 }

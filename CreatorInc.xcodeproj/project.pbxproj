@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		560300622FF4BC8400AE8975 /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = 560300612FF4BC8400AE8975 /* Supabase */; };
+		568A7890303435E10004ACDA /* StreamChat in Frameworks */ = {isa = PBXBuildFile; productRef = 568A788F303435E10004ACDA /* StreamChat */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -63,6 +64,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				568A7890303435E10004ACDA /* StreamChat in Frameworks */,
 				560300622FF4BC8400AE8975 /* Supabase in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -140,6 +142,7 @@
 			name = CreatorInc;
 			packageProductDependencies = (
 				560300612FF4BC8400AE8975 /* Supabase */,
+				568A788F303435E10004ACDA /* StreamChat */,
 			);
 			productName = CreatorInc;
 			productReference = 56BFEAEB2FE0DB80007E68EA /* CreatorInc.app */;
@@ -175,6 +178,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				560300502FF027AB00AE8975 /* XCRemoteSwiftPackageReference "supabase-swift" */,
+				568A78823033E3F80004ACDA /* XCRemoteSwiftPackageReference "stream-chat-swift" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 56BFEAEC2FE0DB80007E68EA /* Products */;
@@ -500,6 +504,14 @@
 				minimumVersion = 2.5.1;
 			};
 		};
+		568A78823033E3F80004ACDA /* XCRemoteSwiftPackageReference "stream-chat-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/GetStream/stream-chat-swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.9.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -507,6 +519,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 560300502FF027AB00AE8975 /* XCRemoteSwiftPackageReference "supabase-swift" */;
 			productName = Supabase;
+		};
+		568A788F303435E10004ACDA /* StreamChat */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 568A78823033E3F80004ACDA /* XCRemoteSwiftPackageReference "stream-chat-swift" */;
+			productName = StreamChat;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

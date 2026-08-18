@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import StreamChat
 
 
 // view(aka sheet) which is visible from discover tab
@@ -13,6 +14,10 @@ import SwiftUI
 struct CreatorDetailView: View {
     let profile: CreatorProfile
     @Environment(\.dismiss) private var dismiss
+    @State private var channelController: ChatChannelController?
+    @State private var messagingError: String?
+    @State private var isShowingThread = false
+    
 
     private var photoURL: URL? {
         guard let address = profile.profilePhotoURL else {
@@ -30,7 +35,7 @@ struct CreatorDetailView: View {
                         creatorPhoto
                         Spacer()
                         Button{
-                            
+                            openConversation()
                         } label: {
                             Label("Message creator", systemImage: "message.fill")
                                 .labelStyle(.iconOnly)
@@ -39,7 +44,7 @@ struct CreatorDetailView: View {
                     .buttonStyle(.borderedProminent)
                     .buttonBorderShape(.circle)
                     .controlSize(.large)
-                    .disabled(true)
+
                     creatorIdentity
 
                     creatorBio
@@ -65,10 +70,29 @@ struct CreatorDetailView: View {
                     }
                 }
             }
+        }.sheet(isPresented: $isShowingThread){
+            if let channelController {
+                ChatThreadView(controller: channelController)
+            }
+        }
+    }
+    
+    private func openConversation() {
+        messagingError = nil
+        guard let supabaseConfig = SupabaseConfig.config, let streamConfig = StreamConfig.config else {
+            messagingError = "Chat is unavailable"
+            return
+        }
+        let service = StreamChatService(supabaseConfig: supabaseConfig, streamConfig: streamConfig)
+        do {
+            channelController = try service.makeDirectChannelController(otherUserId: profile.userId.uuidString.lowercased())
+            isShowingThread = true
+        }catch{
+            messagingError = error.localizedDescription
         }
     }
 
-    // [Clarity → visual hierarchy → prominent profile image]
+
     @ViewBuilder
     private var creatorPhoto: some View {
         AsyncImage(url: photoURL) { image in
