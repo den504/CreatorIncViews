@@ -54,11 +54,11 @@ struct StreamChatService: ChatServicing {
     }
     
     func makeDirectChannelController(otherUserId: String) throws -> ChatChannelController {
-        try chatClient.channelController(createDirectMessageChannelWith: [otherUserId], extraData: [:])
+        try chatClient.channelController(createDirectMessageChannelWith: [otherUserId], messageOrdering: .bottomToTop, extraData: [:])
     }
     
     func makeChannelController(for cid: ChannelId) -> ChatChannelController? {
-        chatClient.channelController(for: cid)
+        chatClient.channelController(for: cid, messageOrdering: .bottomToTop)
     }
 
 
