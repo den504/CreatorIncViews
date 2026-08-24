@@ -23,14 +23,18 @@ final class ChatThreadViewModel: ObservableObject {
     }
     
     func loadMessages() async {
+        //watch or listen for messages to display e.g listener
         controller.messagesChangesPublisher
             .receive(on: DispatchQueue.main)
             .sink{[weak self] _ in
+                //read message
                 self?.messages = self?.controller.messages ?? []
             }
             .store(in: &cancellables)
         do{
+            //wait for synchronize call back 
             try await withCheckedThrowingContinuation{(continuation: CheckedContinuation<Void, Error>) in
+                //fetch messages and open connection for new messages
                 controller.synchronize{error in
                     if let error {continuation.resume(throwing:error)} else {continuation.resume()}
                 }
@@ -46,6 +50,7 @@ final class ChatThreadViewModel: ObservableObject {
     
     func sendMessage (text: String) async throws {
         try await withCheckedThrowingContinuation{(continuation: CheckedContinuation<Void, Error>) in
+            //send messages
             controller.createNewMessage(text: text) {result in
                 continuation.resume(with: result.map{_ in ()})
             }
