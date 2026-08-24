@@ -22,12 +22,14 @@ final class ChatViewModel: ObservableObject { //view model for chat list
         self.service = service
     }
     
+    //https://getstream.io/chat/docs/sdk/ios/combine/channels/
+    //uses method chaining
     func loadChannels(){
         guard let controller = service.makeChannelListController() else {return}
         channelListController = controller
         controller.channelsChangesPublisher
-            .receive(on: DispatchQueue.main)
-            .sink{[weak self] _ in
+            .receive(on: DispatchQueue.main) //changes happen on the main 
+            .sink{[weak self] _ in //only use list when view is being used
                 self?.channels = Array(controller.channels)}
             .store(in: &cancellables)
         controller.synchronize()
