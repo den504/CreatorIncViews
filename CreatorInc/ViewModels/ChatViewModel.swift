@@ -34,6 +34,7 @@ final class ChatViewModel: ObservableObject { //view model for chat list
             .store(in: &cancellables)
         controller.synchronize()
     }
+    //reconnects chat from list
     func makeChannelController(for channel: ChatChannel) -> ChatChannelController? {
         service.makeChannelController(for: channel.cid)
     }
