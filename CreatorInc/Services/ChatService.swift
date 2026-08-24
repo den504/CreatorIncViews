@@ -34,7 +34,7 @@ struct StreamChatService: ChatServicing {
         }
         
     }
-    
+    //login
     func connectUser(id: UUID, name: String, imageURL: URL?) async throws {
         struct TokenResponse: Decodable {let token: String}
         let response: TokenResponse = try await supabaseClient.functions.invoke("stream-token")
@@ -43,20 +43,23 @@ struct StreamChatService: ChatServicing {
         try await chatClient.connectUser(userInfo: userInfo, token: token)
     }
     
+    //log out
     func disconnectUser() async {
         await chatClient.disconnect()
     }
     
+    //open chat list
     func makeChannelListController() -> ChatChannelListController? {
         guard let currentUserId = chatClient.currentUserId else {return nil}
         let query = ChannelListQuery(filter: .containMembers(userIds: [currentUserId]))
         return chatClient.channelListController(query: query)
     }
     
+    //direct messaging
     func makeDirectChannelController(otherUserId: String) throws -> ChatChannelController {
         try chatClient.channelController(createDirectMessageChannelWith: [otherUserId], messageOrdering: .bottomToTop, extraData: [:])
     }
-    
+    //reconnects chat from list
     func makeChannelController(for cid: ChannelId) -> ChatChannelController? {
         chatClient.channelController(for: cid, messageOrdering: .bottomToTop)
     }
