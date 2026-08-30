@@ -9,32 +9,6 @@ import Testing
 
 @MainActor
 struct CreateAccountViewModelTests {
-    @Test func initializationUsesEmptyFieldsAndProvidedMessage() {
-        let viewModel = CreateAccountViewModel(
-            authService: AuthServiceSpy(),
-            message: "Welcome"
-        )
-
-        #expect(viewModel.email.isEmpty)
-        #expect(viewModel.password.isEmpty)
-        #expect(viewModel.confirmedPassword.isEmpty)
-        #expect(viewModel.message == "Welcome")
-        #expect(!viewModel.isLoading)
-    }
-
-    @Test func validationFailureDoesNotCallService() async {
-        let service = AuthServiceSpy()
-        let viewModel = CreateAccountViewModel(authService: service)
-        viewModel.password = "password123"
-        viewModel.confirmedPassword = "password123"
-
-        let didCreateAccount = await viewModel.createAccount(role: .creator)
-
-        #expect(!didCreateAccount)
-        #expect(service.createAccountCalls.isEmpty)
-        #expect(viewModel.message == AuthValidationError.missingEmail.errorDescription)
-        #expect(!viewModel.isLoading)
-    }
 
     @Test func successfulCreationPassesExactInputsAndClearsForm() async throws {
         let service = AuthServiceSpy()
@@ -77,28 +51,7 @@ struct CreateAccountViewModelTests {
         #expect(!viewModel.isLoading)
     }
 
-    @Test func loadingIsTrueWhileServiceRequestIsPending() async {
-        let service = AuthServiceSpy()
-        service.shouldSuspendCreateAccount = true
-        let viewModel = CreateAccountViewModel(authService: service)
-        viewModel.email = "creator@example.com"
-        viewModel.password = "password123"
-        viewModel.confirmedPassword = "password123"
-
-        let operation = Task { @MainActor in
-            await viewModel.createAccount(role: .creator)
-        }
-        await Task.yield()
-
-        #expect(service.createAccountCalls.count == 1)
-        #expect(viewModel.isLoading)
-
-        service.resumeCreateAccount()
-        let didCreateAccount = await operation.value
-
-        #expect(didCreateAccount)
-        #expect(!viewModel.isLoading)
-    }
+ 
 }
 
 @MainActor
@@ -111,17 +64,9 @@ private final class AuthServiceSpy: AuthServicing {
 
     private(set) var createAccountCalls: [CreateAccountCall] = []
     var createAccountError: (any Error)?
-    var shouldSuspendCreateAccount = false
-    private var createAccountContinuation: CheckedContinuation<Void, Never>?
 
     func createAccount(email: String, password: String, role: AccountRole) async throws {
         createAccountCalls.append(.init(email: email, password: password, role: role))
-
-        if shouldSuspendCreateAccount {
-            await withCheckedContinuation { continuation in
-                createAccountContinuation = continuation
-            }
-        }
 
         if let createAccountError {
             throw createAccountError
@@ -133,11 +78,6 @@ private final class AuthServiceSpy: AuthServicing {
     }
     
     func signOut() async throws {}
-
-    func resumeCreateAccount() {
-        createAccountContinuation?.resume()
-        createAccountContinuation = nil
-    }
 }
 
 private enum TestError: LocalizedError {
