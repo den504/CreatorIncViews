@@ -19,11 +19,19 @@
 			remoteGlobalIDString = 56BFEAEA2FE0DB80007E68EA;
 			remoteInfo = CreatorInc;
 		};
+		56D38AD730446D0F00008614 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 56BFEAE32FE0DB80007E68EA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 56BFEAEA2FE0DB80007E68EA;
+			remoteInfo = CreatorInc;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		560300672FF4C30900AE8975 /* CreatorIncTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CreatorIncTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		56BFEAEB2FE0DB80007E68EA /* CreatorInc.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CreatorInc.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		56D38AD330446D0F00008614 /* CreatorIncIntegrationTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CreatorIncIntegrationTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -33,6 +41,13 @@
 				Info.plist,
 			);
 			target = 56BFEAEA2FE0DB80007E68EA /* CreatorInc */;
+		};
+		56D38AE63044994A00008614 /* Exceptions for "CreatorIncIntegrationTests" folder in "CreatorIncIntegrationTests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 56D38AD230446D0F00008614 /* CreatorIncIntegrationTests */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
@@ -48,6 +63,14 @@
 				5603005F2FF2FD7900AE8975 /* Exceptions for "CreatorInc" folder in "CreatorInc" target */,
 			);
 			path = CreatorInc;
+			sourceTree = "<group>";
+		};
+		56D38AD430446D0F00008614 /* CreatorIncIntegrationTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				56D38AE63044994A00008614 /* Exceptions for "CreatorIncIntegrationTests" folder in "CreatorIncIntegrationTests" target */,
+			);
+			path = CreatorIncIntegrationTests;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -69,6 +92,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		56D38AD030446D0F00008614 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -84,6 +114,7 @@
 			children = (
 				56BFEAED2FE0DB80007E68EA /* CreatorInc */,
 				560300682FF4C30900AE8975 /* CreatorIncTests */,
+				56D38AD430446D0F00008614 /* CreatorIncIntegrationTests */,
 				560300602FF4BC8400AE8975 /* Frameworks */,
 				56BFEAEC2FE0DB80007E68EA /* Products */,
 			);
@@ -94,6 +125,7 @@
 			children = (
 				56BFEAEB2FE0DB80007E68EA /* CreatorInc.app */,
 				560300672FF4C30900AE8975 /* CreatorIncTests.xctest */,
+				56D38AD330446D0F00008614 /* CreatorIncIntegrationTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -148,6 +180,29 @@
 			productReference = 56BFEAEB2FE0DB80007E68EA /* CreatorInc.app */;
 			productType = "com.apple.product-type.application";
 		};
+		56D38AD230446D0F00008614 /* CreatorIncIntegrationTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 56D38ADB30446D0F00008614 /* Build configuration list for PBXNativeTarget "CreatorIncIntegrationTests" */;
+			buildPhases = (
+				56D38ACF30446D0F00008614 /* Sources */,
+				56D38AD030446D0F00008614 /* Frameworks */,
+				56D38AD130446D0F00008614 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				56D38AD830446D0F00008614 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				56D38AD430446D0F00008614 /* CreatorIncIntegrationTests */,
+			);
+			name = CreatorIncIntegrationTests;
+			packageProductDependencies = (
+			);
+			productName = CreatorIncIntegrationTests;
+			productReference = 56D38AD330446D0F00008614 /* CreatorIncIntegrationTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -164,6 +219,10 @@
 					};
 					56BFEAEA2FE0DB80007E68EA = {
 						CreatedOnToolsVersion = 26.2;
+					};
+					56D38AD230446D0F00008614 = {
+						CreatedOnToolsVersion = 26.2;
+						TestTargetID = 56BFEAEA2FE0DB80007E68EA;
 					};
 				};
 			};
@@ -187,6 +246,7 @@
 			targets = (
 				56BFEAEA2FE0DB80007E68EA /* CreatorInc */,
 				560300662FF4C30900AE8975 /* CreatorIncTests */,
+				56D38AD230446D0F00008614 /* CreatorIncIntegrationTests */,
 			);
 		};
 /* End PBXProject section */
@@ -200,6 +260,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		56BFEAE92FE0DB80007E68EA /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		56D38AD130446D0F00008614 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -223,6 +290,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		56D38ACF30446D0F00008614 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -230,6 +304,11 @@
 			isa = PBXTargetDependency;
 			target = 56BFEAEA2FE0DB80007E68EA /* CreatorInc */;
 			targetProxy = 5603006B2FF4C30900AE8975 /* PBXContainerItemProxy */;
+		};
+		56D38AD830446D0F00008614 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 56BFEAEA2FE0DB80007E68EA /* CreatorInc */;
+			targetProxy = 56D38AD730446D0F00008614 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -463,6 +542,50 @@
 			};
 			name = Release;
 		};
+		56D38AD930446D0F00008614 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = L4JYF9R6VL;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = CreatorIncIntegrationTests/Info.plist;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.abuahapps.CreatorIncIntegrationTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CreatorInc.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/CreatorInc";
+			};
+			name = Debug;
+		};
+		56D38ADA30446D0F00008614 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = L4JYF9R6VL;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = CreatorIncIntegrationTests/Info.plist;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.abuahapps.CreatorIncIntegrationTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CreatorInc.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/CreatorInc";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -489,6 +612,15 @@
 			buildConfigurations = (
 				56BFEAF72FE0DB81007E68EA /* Debug */,
 				56BFEAF82FE0DB81007E68EA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		56D38ADB30446D0F00008614 /* Build configuration list for PBXNativeTarget "CreatorIncIntegrationTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				56D38AD930446D0F00008614 /* Debug */,
+				56D38ADA30446D0F00008614 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
