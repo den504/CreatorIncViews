@@ -14,7 +14,9 @@ console.log("Hello from Functions!");
 // Use secret for Server-to-server, internal calls
 export default {
   fetch: withSupabase({ auth: "user" }, async (req, ctx) => {
-
+    
+    // Get the Stream API key and secret from environment variables
+    //supabase functions secrets set STREAM_API_KEY=your_stream_api_key
     const streamApiKey = Deno.env.get("STREAM_API_KEY");
     const streamApiSecret = Deno.env.get("STREAM_API_SECRET");
     if(!streamApiKey || !streamApiSecret) {
