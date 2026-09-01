@@ -14,7 +14,7 @@ console.log("Hello from Functions!");
 // Use secret for Server-to-server, internal calls
 export default {
   fetch: withSupabase({ auth: "user" }, async (req, ctx) => {
-    
+
     // Get the Stream API key and secret from environment variables
     //supabase functions secrets set STREAM_API_KEY=your_stream_api_key
     const streamApiKey = Deno.env.get("STREAM_API_KEY");
@@ -35,14 +35,3 @@ export default {
 
   }),
 };
-
-/* To invoke locally:
-
-  1. Run `supabase start` (see: https://supabase.com/docs/reference/cli/supabase-start)
-  2. Make an HTTP request:
-
-  curl -i --location --request POST 'http://127.0.0.1:54321/functions/v1/stream-token' \
-    --header 'apiKey: sb_publishable_ACJWlzQHlZjBrEguHvfOxg_3BJgxAaH' \
-    --data '{"name":"Functions"}'
-
-*/
