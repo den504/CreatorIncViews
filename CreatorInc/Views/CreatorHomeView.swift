@@ -15,9 +15,8 @@ struct CreatorHomeView: View {
         NavigationStack{
             ZStack{
                 Color.creatorBackground.ignoresSafeArea()
-                VStack(spacing: 20) {
-                    Text("Hello World")
-                }.toolbar {
+                ShortsFeedView()
+                .toolbar {
                     ToolbarItem(placement: .topBarTrailing){
                         Button(action: onProfileTapped){
                             Image(systemName: "person.crop.circle")
