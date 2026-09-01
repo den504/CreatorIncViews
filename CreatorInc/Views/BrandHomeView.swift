@@ -16,7 +16,7 @@ struct BrandHomeView: View {
 
             ZStack{
                 Color.creatorBackground.ignoresSafeArea()
-                Text("Hello World — Home")
+                ShortsFeedView()
                     .toolbar {
                         ToolbarItem(placement: .topBarTrailing) {
                             

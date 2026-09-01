@@ -132,28 +132,29 @@ struct CreatorProfileView: View {
     }
 
     
-    private func shortThumbnail(url: String) -> some View { //Thumb nails for shorts, gets the url from short card
-        ZStack {
-            AsyncImage(url: URL(string: url)) { image in
-                image.resizable().scaledToFill()
-            } placeholder: {
-                Color.creatorCard
-            }
-            Image(systemName: "play.fill")
-                .font(.caption.bold()).padding(12)
-                .background(Color.creatorPrimary)
-                .clipShape(Circle())
-        }
-        .frame(height: 110)
-        .clipShape(RoundedRectangle(cornerRadius: 10))
-    }
+    // private func shortThumbnail(url: String) -> some View { //Thumb nails for shorts, gets the url from short card
+    //     ZStack {
+    //         AsyncImage(url: URL(string: url)) { image in
+    //             image.resizable().scaledToFill()
+    //         } placeholder: {
+    //             Color.creatorCard
+    //         }
+    //         Image(systemName: "play.fill")
+    //             .font(.caption.bold()).padding(12)
+    //             .background(Color.creatorPrimary)
+    //             .clipShape(Circle())
+    //     }
+    //     .frame(height: 110)
+    //     .clipShape(RoundedRectangle(cornerRadius: 10))
+    // }
     
     private func shortCard(short: CreatorShort) -> some View {
         Button {
             selectedShort = short
         } label : {
             VStack(alignment: .leading, spacing: 7) {
-                shortThumbnail(url: short.thumbnailURL)
+                // shortThumbnail(url: short.thumbnailURL)
+                ShortThumbnailView(url: short.thumbnailURL)
                 Text(short.createdAt.formatted(.relative(presentation: .named)))
                     .font(.caption).foregroundStyle(Color.creatorMuted)
             }

@@ -39,7 +39,7 @@ class CreatorShortsViewModel: ObservableObject {
         }
         do {
             try await validator.validateDuration(url: url)
-            let description = validator.optionalText(description)
+            let description = try validator.requiredDescription(description)
             let compressedURL = try await CreatorShortVideoProcessor.compress(url: url)
             let videoData = try Data(contentsOf: compressedURL) //from foundations - reads raw bytes off disk given a local file url
             let thumbnailData = try await CreatorShortVideoProcessor.thumbnail(from: url)

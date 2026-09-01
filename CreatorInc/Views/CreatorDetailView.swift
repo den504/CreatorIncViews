@@ -17,7 +17,9 @@ struct CreatorDetailView: View {
     @State private var channelController: ChatChannelController?
     @State private var messagingError: String?
     @State private var isShowingThread = false
-    
+    @StateObject private var shortsViewModel = CreatorShortsStripViewModel(service: makeFeedService())
+    @State private var selectedShort: CreatorShort?
+    private let columns = [GridItem(.flexible()) , GridItem(.flexible())]
 
     private var photoURL: URL? {
         guard let address = profile.profilePhotoURL else {
@@ -48,6 +50,9 @@ struct CreatorDetailView: View {
                     creatorIdentity
 
                     creatorBio
+
+
+                    shortsSection
                 }
                 .frame(
                     maxWidth: .infinity,
@@ -74,6 +79,10 @@ struct CreatorDetailView: View {
             if let channelController {
                 ChatThreadView(controller: channelController)
             }
+        }.task {
+            await shortsViewModel.load(for: profile.userId)
+        }.sheet(item: $selectedShort) { short in
+            ShortPlayerView(short: short)
         }
     }
     
@@ -151,6 +160,25 @@ struct CreatorDetailView: View {
                         horizontal: false,
                         vertical: true
                     )
+            }
+        }
+    }
+
+    private func shortButton(for short: CreatorShort) -> some View {
+        Button {
+            selectedShort = short
+        } label: {
+            ShortThumbnailView(url: short.thumbnailURL)
+        }
+    }
+
+    @ViewBuilder
+    private var shortsSection: some View {
+        if !shortsViewModel.shorts.isEmpty {
+            Text("Shorts")
+                .font(.title3.bold())
+            LazyVGrid(columns: columns, spacing: 16) {
+                ForEach(shortsViewModel.shorts, content: shortButton(for:))
             }
         }
     }
