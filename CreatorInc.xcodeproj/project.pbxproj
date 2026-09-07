@@ -34,23 +34,6 @@
 		56D38AD330446D0F00008614 /* CreatorIncIntegrationTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CreatorIncIntegrationTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
-/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		5603005F2FF2FD7900AE8975 /* Exceptions for "CreatorInc" folder in "CreatorInc" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Info.plist,
-			);
-			target = 56BFEAEA2FE0DB80007E68EA /* CreatorInc */;
-		};
-		56D38AE63044994A00008614 /* Exceptions for "CreatorIncIntegrationTests" folder in "CreatorIncIntegrationTests" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Info.plist,
-			);
-			target = 56D38AD230446D0F00008614 /* CreatorIncIntegrationTests */;
-		};
-/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
-
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		560300682FF4C30900AE8975 /* CreatorIncTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
@@ -59,17 +42,11 @@
 		};
 		56BFEAED2FE0DB80007E68EA /* CreatorInc */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				5603005F2FF2FD7900AE8975 /* Exceptions for "CreatorInc" folder in "CreatorInc" target */,
-			);
 			path = CreatorInc;
 			sourceTree = "<group>";
 		};
 		56D38AD430446D0F00008614 /* CreatorIncIntegrationTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				56D38AE63044994A00008614 /* Exceptions for "CreatorIncIntegrationTests" folder in "CreatorIncIntegrationTests" target */,
-			);
 			path = CreatorIncIntegrationTests;
 			sourceTree = "<group>";
 		};
