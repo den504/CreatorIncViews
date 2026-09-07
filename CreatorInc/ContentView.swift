@@ -16,6 +16,7 @@ struct ContentView: View {
     @State private var brandProfile: BrandProfile?
     @State private var signOutErrorMessage = ""
     @State private var isShowingSignOutError = false
+    @State private var connectedChatUserId: UUID?
 
     var body: some View {
     
@@ -55,10 +56,14 @@ struct ContentView: View {
                 BuildCreatorProfileView(profile: creatorProfile, onBack: {activeScreen = creatorProfile == nil ? .login : .creatorProfile }, onProfileSaved: {profile in
                     creatorProfile = profile
                     activeScreen = .creatorProfile //from the case statement
+                    // first-run sign-up never passes through loadProfile's connect step, so connect here too
+                    Task { await connectChat(userId: profile.userId, displayName: profile.displayName, photoURL: profile.profilePhotoURL) }
                 })
             case .buildBrandProfile:
                 BuildBrandProfileView(profile: brandProfile, onBack: {activeScreen = brandProfile == nil ? .login : .brandProfile}, onProfileSaved: {profile in brandProfile = profile
                     activeScreen = .brandProfile
+                    // first-run sign-up never passes through loadProfile's connect step, so connect here too
+                    Task { await connectChat(userId: profile.userId, displayName: profile.companyName, photoURL: nil) }
                 })
             case .creatorHome:
                 CreatorMainTabView(onProfileTapped: {activeScreen = .creatorProfile}, onSignOut: { Task { await signOut() } })
@@ -132,6 +137,7 @@ struct ContentView: View {
             creatorProfile = nil
             brandProfile = nil
             loginMessage = nil
+            connectedChatUserId = nil
             activeScreen = .login
         } catch {
             signOutErrorMessage = error.localizedDescription
@@ -140,13 +146,17 @@ struct ContentView: View {
     }
     
     private func connectChat(userId: UUID, displayName: String, photoURL: String?) async {
+        // already connected as this user (e.g. re-saving a profile) - nothing to do
+        guard connectedChatUserId != userId else { return }
         guard let supabaseConfig = SupabaseConfig.config, let streamConfig = StreamConfig.config else{
             return
         }
         let chatService = StreamChatService(supabaseConfig: supabaseConfig, streamConfig: streamConfig)
         do {
             try await chatService.connectUser(id: userId, name: displayName, imageURL: photoURL.flatMap(URL.init))
+            connectedChatUserId = userId
         }catch {
+            connectedChatUserId = nil
             print("Stream connect failed", error)
             
         }
